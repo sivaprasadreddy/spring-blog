@@ -5,7 +5,7 @@ CREATE TABLE POSTS
     id                BIGINT                                                        DEFAULT nextval('post_id_seq') NOT NULL,
     title             VARCHAR(255) UNIQUE                                  NOT NULL,
     slug              VARCHAR(255) UNIQUE                                  NOT NULL,
-    short_description VARCHAR(255) UNIQUE                                  NOT NULL,
+    short_description VARCHAR(255)                                  NOT NULL,
     content_markdown  TEXT                                                 NOT NULL,
     content_html      TEXT                                                 NOT NULL,
     status            VARCHAR(20) CHECK (status IN ('DRAFT', 'PUBLISHED')) NOT NULL,

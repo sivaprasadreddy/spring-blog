@@ -1,6 +1,4 @@
-# Spring Boot From Zero To Hero
-
-This repository contains the source code for the [Spring Blog](https://www.youtube.com/watch?v=Yi6NTOwGbTM).
+# Spring-Blog
 
 Blogging platform using Java and Spring Boot
 
