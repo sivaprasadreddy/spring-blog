@@ -1,0 +1,71 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0e0e0e; /* Dark background */
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    background-color: #1c1c1c; /* Darker card background */
+    border-radius: 10px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    text-align: center;
+}
+
+.login-container h1 {
+    color: #ffffff; /* White text color */
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.login-container p {
+    color: #b3b3b3; /* Light gray for subtitle */
+    font-size: 0.9rem;
+}
+
+.login-container form {
+    margin-top: 15px;
+}
+
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: #333333; /* Input background */
+    color: #fff;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff; /* Blue button */
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login-container button:hover {
+    background: #0056b3; /* Darker blue on hover */
+}
+
+.login-container a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
