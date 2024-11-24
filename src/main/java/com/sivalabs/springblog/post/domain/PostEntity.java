@@ -1,5 +1,6 @@
 package com.sivalabs.springblog.post.domain;
 
+import com.sivalabs.springblog.post.domain.models.PostStatus;
 import com.sivalabs.springblog.user.domain.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,7 +42,7 @@ public class PostEntity {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private PostStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
@@ -57,16 +58,9 @@ public class PostEntity {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-    // Enum for Status
-    public enum Status {
-        DRAFT,
-        PUBLISHED
-    }
 
-    // Default constructor
     public PostEntity() {}
 
-    // Constructor with fields
     public PostEntity(
             Long id,
             String title,
@@ -74,7 +68,7 @@ public class PostEntity {
             String shortDescription,
             String contentMarkdown,
             String contentHtml,
-            Status status,
+            PostStatus status,
             UserEntity createdBy,
             LocalDateTime createdDate,
             UserEntity updatedBy,
@@ -92,7 +86,6 @@ public class PostEntity {
         this.updatedDate = updatedDate;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -141,11 +134,11 @@ public class PostEntity {
         this.contentHtml = contentHtml;
     }
 
-    public Status getStatus() {
+    public PostStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(PostStatus status) {
         this.status = status;
     }
 
