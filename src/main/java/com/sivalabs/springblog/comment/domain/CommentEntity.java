@@ -40,10 +40,8 @@ public class CommentEntity {
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
-    // Default constructor
     public CommentEntity() {}
 
-    // Constructor with fields
     public CommentEntity(
             Long id, String name, String content, PostEntity post, UserEntity createdBy, LocalDateTime createdDate) {
         this.id = id;
@@ -54,7 +52,6 @@ public class CommentEntity {
         this.createdDate = createdDate;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
