@@ -4,9 +4,10 @@ import com.sivalabs.springblog.post.domain.PostNotFoundException;
 import java.net.URI;
 import java.time.Instant;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -15,25 +16,24 @@ public class GlobalExceptionHandler {
     private static final String SERVICE_NAME = "post-service";
 
     @ExceptionHandler(Exception.class)
-    ProblemDetail handleUnhandledException(Exception e) {
-        ProblemDetail problemDetail =
-                ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        problemDetail.setTitle("Internal Server Error");
-        problemDetail.setType(ISE_FOUND_TYPE);
-        problemDetail.setProperty("service", SERVICE_NAME);
-        problemDetail.setProperty("error_post", "Generic");
-        problemDetail.setProperty("timestamp", Instant.now());
-        return problemDetail;
+    public ModelAndView handleUnhandledException(Exception e, Model model) {
+        model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        model.addAttribute("error", "Internal Server Error");
+        model.addAttribute("message", e.getMessage());
+        model.addAttribute("timestamp", Instant.now());
+        model.addAttribute("type", ISE_FOUND_TYPE);
+        model.addAttribute("service", SERVICE_NAME);
+        return new ModelAndView("error", model.asMap());
     }
 
     @ExceptionHandler(PostNotFoundException.class)
-    ProblemDetail handlePostNotFoundException(PostNotFoundException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-        problemDetail.setTitle("Post Not Found");
-        problemDetail.setType(NOT_FOUND_TYPE);
-        problemDetail.setProperty("service", SERVICE_NAME);
-        problemDetail.setProperty("error_post", "Generic");
-        problemDetail.setProperty("timestamp", Instant.now());
-        return problemDetail;
+    public ModelAndView handlePostNotFoundException(PostNotFoundException e, Model model) {
+        model.addAttribute("status", HttpStatus.NOT_FOUND.value());
+        model.addAttribute("error", "Post Not Found");
+        model.addAttribute("message", e.getMessage());
+        model.addAttribute("timestamp", Instant.now());
+        model.addAttribute("type", NOT_FOUND_TYPE);
+        model.addAttribute("service", SERVICE_NAME);
+        return new ModelAndView("error", model.asMap());
     }
 }
