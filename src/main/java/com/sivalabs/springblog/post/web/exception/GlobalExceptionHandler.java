@@ -1,15 +1,14 @@
 package com.sivalabs.springblog.post.web.exception;
 
 import com.sivalabs.springblog.post.domain.PostNotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.net.URI;
 import java.time.Instant;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
     private static final URI NOT_FOUND_TYPE = URI.create("https://api.springblog.com/errors/not-found");
     private static final URI ISE_FOUND_TYPE = URI.create("https://api.springblog.com/errors/server-error");

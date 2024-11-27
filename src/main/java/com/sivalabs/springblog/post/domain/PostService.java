@@ -1,6 +1,7 @@
 package com.sivalabs.springblog.post.domain;
 
 import com.sivalabs.springblog.ApplicationProperties;
+import com.sivalabs.springblog.common.PagedResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public class PostService {
     }
 
     public PagedResult<Post> getPosts(int pageNo) {
-        Sort sort = Sort.by("title").ascending();
+        Sort sort = Sort.by("created_date").ascending();
         pageNo = pageNo <= 1 ? 0 : pageNo - 1;
         Pageable pageable = PageRequest.of(pageNo, properties.pageSize(), sort);
         Page<Post> productsPage = postRepository.findAll(pageable).map(PostMapper::toPost);

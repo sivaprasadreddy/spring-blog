@@ -1,4 +1,4 @@
-package com.sivalabs.springblog.post.domain;
+package com.sivalabs.springblog.common;
 
 import java.util.List;
 

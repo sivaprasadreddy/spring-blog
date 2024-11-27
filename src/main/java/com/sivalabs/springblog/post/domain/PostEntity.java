@@ -58,7 +58,6 @@ public class PostEntity {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
-
     public PostEntity() {}
 
     public PostEntity(
