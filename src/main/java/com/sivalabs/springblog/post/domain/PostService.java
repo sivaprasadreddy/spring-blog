@@ -21,7 +21,7 @@ public class PostService {
     }
 
     public PagedResult<Post> getPosts(int pageNo) {
-        Sort sort = Sort.by("created_date").ascending();
+        Sort sort = Sort.by("createdDate").ascending();
         pageNo = pageNo <= 1 ? 0 : pageNo - 1;
         Pageable pageable = PageRequest.of(pageNo, properties.pageSize(), sort);
         Page<Post> productsPage = postRepository.findAll(pageable).map(PostMapper::toPost);
@@ -35,5 +35,12 @@ public class PostService {
                 productsPage.isLast(),
                 productsPage.hasNext(),
                 productsPage.hasPrevious());
+    }
+
+    public Post getPostBySlug(String slug) {
+        return postRepository
+                .findBySlug(slug)
+                .map(PostMapper::toPost)
+                .orElseThrow(() -> new PostNotFoundException("Post not found with slug: " + slug));
     }
 }
