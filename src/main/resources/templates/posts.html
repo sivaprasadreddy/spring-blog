@@ -11,7 +11,7 @@
 <div layout:fragment="content">
     <h1>Posts</h1>
 
-    <!-- Lista de Posts -->
+    <!-- List of Posts -->
     <div class="row row-cols-1 row-cols-md-3">
         <div class="col mb-3" th:each="post : ${pagedResult.data}">
             <div class="card h-100">
@@ -30,20 +30,20 @@
         </div>
     </div>
 
-    <!-- Paginación -->
+    <!-- Pagination -->
     <div>
         <ul class="pagination">
-            <!-- Botón Anterior -->
+            <!-- Previous Button -->
             <li th:if="${pagedResult.hasPrevious}" class="page-item">
                 <a th:href="@{'/posts?page=' + ${pagedResult.pageNumber - 1}}" class="page-link">Previous</a>
             </li>
 
-            <!-- Números de Página -->
+            <!-- Page Numbers -->
             <li th:each="i : ${#numbers.sequence(1, pagedResult.totalPages)}" class="page-item" th:classappend="${i == pagedResult.pageNumber} ? 'active'">
                 <a th:href="@{'/posts?page=' + ${i}}" class="page-link" th:text="${i}">1</a>
             </li>
 
-            <!-- Botón Siguiente -->
+            <!-- Next button -->
             <li th:if="${pagedResult.hasNext}" class="page-item">
                 <a th:href="@{'/posts?page=' + ${pagedResult.pageNumber + 1}}" class="page-link">Next</a>
             </li>

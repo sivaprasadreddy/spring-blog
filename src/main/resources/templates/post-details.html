@@ -9,10 +9,10 @@
 </head>
 <body>
 <div layout:fragment="content" class="container mt-4">
-    <!-- Título del post -->
+    <!-- Post title -->
     <h1 th:text="${post.title}" class="mb-4">Post Title</h1>
 
-    <!-- Fecha de creación y autor -->
+    <!-- Date of creation and author -->
     <p class="text-muted">
         Created on
         <span th:text="${post.createdDate}">2024-12-03</span>
@@ -20,12 +20,12 @@
         <span th:text="${post.createdBy.name}">Author Name</span>
     </p>
 
-    <!-- Contenido del post -->
+    <!-- Post content -->
     <div class="post-content mt-4">
         <p th:utext="${post.contentHtml}">Post Content</p>
     </div>
 
-    <!-- Botón para regresar a la lista de posts -->
+    <!-- Button to return to the list of posts -->
     <div class="mt-4">
         <a th:href="@{/posts}" class="btn btn-primary">Back to Posts</a>
     </div>
