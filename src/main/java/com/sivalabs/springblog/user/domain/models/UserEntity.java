@@ -1,4 +1,4 @@
-package com.sivalabs.springblog.user.domain;
+package com.sivalabs.springblog.user.domain.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,9 +27,9 @@ public class UserEntity {
     private String name;
 
     @Column(nullable = false)
-    private String role;
+    private RoleEnum role;
 
-    public UserEntity(Long id, String email, String password, String name, String role) {
+    public UserEntity(Long id, String email, String password, String name, RoleEnum role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -71,11 +71,11 @@ public class UserEntity {
         this.name = name;
     }
 
-    public String getRole() {
+    public RoleEnum getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RoleEnum role) {
         this.role = role;
     }
 }

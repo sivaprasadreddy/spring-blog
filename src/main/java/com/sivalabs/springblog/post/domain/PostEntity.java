@@ -1,7 +1,7 @@
 package com.sivalabs.springblog.post.domain;
 
 import com.sivalabs.springblog.post.domain.models.PostStatus;
-import com.sivalabs.springblog.user.domain.UserEntity;
+import com.sivalabs.springblog.user.domain.models.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
