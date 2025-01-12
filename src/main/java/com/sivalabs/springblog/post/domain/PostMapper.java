@@ -1,7 +1,7 @@
 package com.sivalabs.springblog.post.domain;
 
-import com.sivalabs.springblog.user.domain.UserDTO;
-import com.sivalabs.springblog.user.domain.UserMapper;
+import com.sivalabs.springblog.user.domain.dtos.UserDTO;
+import com.sivalabs.springblog.user.domain.mappers.UserMapper;
 
 class PostMapper {
 

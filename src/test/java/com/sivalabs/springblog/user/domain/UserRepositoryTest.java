@@ -3,6 +3,9 @@ package com.sivalabs.springblog.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+
+import com.sivalabs.springblog.user.domain.models.UserEntity;
+import com.sivalabs.springblog.user.domain.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

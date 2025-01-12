@@ -1,7 +1,7 @@
 package com.sivalabs.springblog.post.domain;
 
 import com.sivalabs.springblog.post.domain.models.PostStatus;
-import com.sivalabs.springblog.user.domain.UserDTO;
+import com.sivalabs.springblog.user.domain.dtos.UserDTO;
 import java.time.LocalDateTime;
 
 public record Post(
