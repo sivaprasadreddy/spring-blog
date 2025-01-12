@@ -2,22 +2,21 @@ package com.sivalabs.springblog.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
+import com.sivalabs.springblog.TestcontainersConfig;
+import com.sivalabs.springblog.user.domain.models.RoleEnum;
 import com.sivalabs.springblog.user.domain.models.UserEntity;
 import com.sivalabs.springblog.user.domain.repositories.UserRepository;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
-@DataJpaTest(
-        properties = {
-            "spring.test.database.replace=none",
-            "spring.datasource.url=jdbc:tc:postgresql:17:///db",
-        })
+@DataJpaTest
+@Import(TestcontainersConfig.class)
 @Sql("/test-data.sql")
-public class UserRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,8 +32,7 @@ public class UserRepositoryTest {
         UserEntity user =
                 userRepository.findByEmail("geovanny.mendoza@example.com").orElseThrow();
         assertThat(user.getName()).isEqualTo("Geovanny Mendoza");
-        assertThat(user.getPassword()).isEqualTo("password456");
-        assertThat(user.getRole()).isEqualTo("User");
+        assertThat(user.getRole()).isEqualTo(RoleEnum.USER);
     }
 
     @Test

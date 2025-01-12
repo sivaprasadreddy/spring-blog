@@ -1,16 +1,13 @@
 package com.sivalabs.springblog.security;
 
 import com.sivalabs.springblog.user.domain.models.UserEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-
 import java.util.Set;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class SecurityUser extends org.springframework.security.core.userdetails.User {
 
     private final String name;
     private final Long id;
-
 
     public SecurityUser(UserEntity user) {
         super(
@@ -33,8 +30,4 @@ public class SecurityUser extends org.springframework.security.core.userdetails.
     public Long getId() {
         return id;
     }
-
-
-
-
 }

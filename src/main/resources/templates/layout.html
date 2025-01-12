@@ -2,7 +2,8 @@
 <html lang="en"
       xmlns:hx="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -27,9 +28,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="isAnonymous()">
                         <a class="nav-link" href="/login" th:href="@{/login}">
                             Login
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/login" th:href="@{/logout}">
+                            Logout
                         </a>
                     </li>
                 </ul>
@@ -53,12 +59,11 @@
 
 <!-- Footer (Optional) -->
 <footer class="bg-dark text-white text-center py-3 mt-4">
-    <p>&copy; 2024 Spring Blog - All rights reserved.</p>
+    <p>&copy; 2025 Spring Blog - All rights reserved.</p>
 </footer>
 
 <!-- Scripts -->
 <script src="/webjars/bootstrap/5.3.3/js/bootstrap.bundle.js"></script>
-<script src="/webjars/htmx.org/2.0.3/dist/htmx.min.js"></script>
 <div layout:fragment="pageScripts">
 </div>
 </body>

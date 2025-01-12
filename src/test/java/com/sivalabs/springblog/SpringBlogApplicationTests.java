@@ -1,10 +1,8 @@
 package com.sivalabs.springblog;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class SpringBlogApplicationTests {
+class SpringBlogApplicationTests extends AbstractIT {
 
     @Test
     void contextLoads() {}
