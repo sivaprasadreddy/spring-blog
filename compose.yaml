@@ -1,15 +1,10 @@
 services:
-  postgres_db:
-    container_name: "postgres_db"
+  blog-db:
+    container_name: "blog-db"
     image:  postgres:17
-    env_file: ./.env
     ports:
-      - ${DB_LOCAL_PORT}:${DB_DOCKER_PORT}
+      - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - postgres-data:${DB_VOLUME_URL}
-volumes:
-  postgres-data:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres

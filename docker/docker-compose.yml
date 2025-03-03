@@ -1,0 +1,30 @@
+name: 'spring-blog'
+services:
+  blog-db:
+    image: postgres:17-alpine
+    container_name: blog-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+
+  spring-blog:
+    image: sivaprasadreddy/spring-blog
+    container_name: spring-blog
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_URL: jdbc:postgresql://blog-db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      - blog-db
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1024m

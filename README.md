@@ -46,9 +46,6 @@ $ docker compose version
 * Admin - Delete a Post
 * Admin - Delete comment(s)
 
-## Database Design
-![Blog DB Schema Design](docs/DB_Desing_Blog.png)
-
 ## How to?
 
 ### Run Unit / Integration Tests
