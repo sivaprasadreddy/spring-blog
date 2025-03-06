@@ -1,9 +1,7 @@
-package com.sivalabs.springblog.domain.repositories;
+package com.sivalabs.springblog.adapter.jpa;
 
 import com.sivalabs.springblog.TestcontainersConfig;
-import com.sivalabs.springblog.domain.entities.UserEntity;
 import com.sivalabs.springblog.domain.models.Role;
-import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +12,10 @@ import org.springframework.test.context.jdbc.Sql;
 @DataJpaTest
 @Import(TestcontainersConfig.class)
 @Sql("/test-data.sql")
-class UserRepositoryTest {
+class JpaUserRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Test
-    void shouldGetAllUsers() {
-        List<UserEntity> users = userRepository.findAll();
-        Assertions.assertThat(users).hasSize(2);
-    }
+    private JpaUserRepository userRepository;
 
     @Test
     void shouldGetUserByEmail() {

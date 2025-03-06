@@ -1,6 +1,5 @@
 package com.sivalabs.springblog.domain.models;
 
-import com.sivalabs.springblog.domain.entities.UserEntity;
 import java.util.Set;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -9,7 +8,7 @@ public class SecurityUser extends org.springframework.security.core.userdetails.
     private final String name;
     private final Long id;
 
-    public SecurityUser(UserEntity user) {
+    public SecurityUser(User user) {
         super(
                 user.getEmail(),
                 user.getPassword(),

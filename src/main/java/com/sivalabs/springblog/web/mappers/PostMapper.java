@@ -1,23 +1,23 @@
 package com.sivalabs.springblog.web.mappers;
 
-import com.sivalabs.springblog.domain.entities.PostEntity;
+import com.sivalabs.springblog.domain.models.Post;
 import com.sivalabs.springblog.web.dtos.PostDTO;
 import com.sivalabs.springblog.web.dtos.UserDTO;
 
 public class PostMapper {
 
-    public static PostDTO toPost(PostEntity postEntity) {
+    public static PostDTO toPost(Post post) {
 
-        UserDTO createdBy = postEntity.getCreatedBy() != null ? UserMapper.toUserDTO(postEntity.getCreatedBy()) : null;
+        UserDTO createdBy = post.getCreatedBy() != null ? UserMapper.toUserDTO(post.getCreatedBy()) : null;
 
         return new PostDTO(
-                postEntity.getTitle(),
-                postEntity.getSlug(),
-                postEntity.getShortDescription(),
-                postEntity.getContentMarkdown(),
-                postEntity.getContentHtml(),
-                postEntity.getStatus(),
+                post.getTitle(),
+                post.getSlug(),
+                post.getShortDescription(),
+                post.getContentMarkdown(),
+                post.getContentHtml(),
+                post.getStatus(),
                 createdBy,
-                postEntity.getCreatedDate());
+                post.getCreatedDate());
     }
 }

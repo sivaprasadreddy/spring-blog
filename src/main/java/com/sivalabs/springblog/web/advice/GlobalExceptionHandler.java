@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+class GlobalExceptionHandler {
+
     @ExceptionHandler(Exception.class)
-    public ModelAndView handle(Exception e, Model model) {
+    ModelAndView handle(Exception e, Model model) {
         model.addAttribute("error", "Internal Server Error");
         model.addAttribute("message", e.getMessage());
         model.addAttribute("timestamp", Instant.now());
@@ -19,7 +20,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ModelAndView handle(ResourceNotFoundException e, Model model) {
+    ModelAndView handle(ResourceNotFoundException e, Model model) {
         model.addAttribute("error", "Resource Not Found");
         model.addAttribute("message", e.getMessage());
         model.addAttribute("timestamp", Instant.now());
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ModelAndView handle(AccessDeniedException e, Model model) {
+    ModelAndView handle(AccessDeniedException e, Model model) {
         model.addAttribute("error", "Access Denied");
         model.addAttribute("message", e.getMessage());
         model.addAttribute("timestamp", Instant.now());

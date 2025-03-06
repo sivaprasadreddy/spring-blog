@@ -1,4 +1,4 @@
-package com.sivalabs.springblog.domain.entities;
+package com.sivalabs.springblog.adapter.jpa;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
-public class CommentEntity extends BaseEntity {
+class CommentEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_id_seq_gen")

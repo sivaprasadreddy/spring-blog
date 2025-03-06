@@ -1,4 +1,4 @@
-package com.sivalabs.springblog.domain.entities;
+package com.sivalabs.springblog.adapter.jpa;
 
 import com.sivalabs.springblog.domain.models.PostStatus;
 import jakarta.persistence.Column;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "posts")
-public class PostEntity extends BaseEntity {
+class PostEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_id_seq_gen")

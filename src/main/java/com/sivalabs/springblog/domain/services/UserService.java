@@ -1,8 +1,8 @@
 package com.sivalabs.springblog.domain.services;
 
-import com.sivalabs.springblog.domain.entities.UserEntity;
+import com.sivalabs.springblog.domain.data.UserRepository;
 import com.sivalabs.springblog.domain.models.CreateUserCmd;
-import com.sivalabs.springblog.domain.repositories.UserRepository;
+import com.sivalabs.springblog.domain.models.User;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,17 +19,17 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<UserEntity> findByEmail(String email) {
-        return userRepository.findByEmailIgnoreCase(email);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Transactional
     public void createUser(CreateUserCmd cmd) {
-        var user = new UserEntity();
+        var user = new User();
         user.setName(cmd.name());
         user.setEmail(cmd.email());
         user.setPassword(passwordEncoder.encode(cmd.password()));
         user.setRole(cmd.role());
-        userRepository.save(user);
+        userRepository.create(user);
     }
 }

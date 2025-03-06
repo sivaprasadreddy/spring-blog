@@ -1,11 +1,11 @@
-package com.sivalabs.springblog.domain.entities;
+package com.sivalabs.springblog.adapter.jpa;
 
 import com.sivalabs.springblog.domain.models.Role;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class UserEntity extends BaseEntity {
+class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")

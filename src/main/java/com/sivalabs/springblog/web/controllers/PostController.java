@@ -1,10 +1,9 @@
 package com.sivalabs.springblog.web.controllers;
 
-import com.sivalabs.springblog.domain.entities.PostEntity;
+import com.sivalabs.springblog.ApplicationProperties;
 import com.sivalabs.springblog.domain.models.PagedResult;
+import com.sivalabs.springblog.domain.models.Post;
 import com.sivalabs.springblog.domain.services.PostService;
-import com.sivalabs.springblog.web.dtos.PostDTO;
-import com.sivalabs.springblog.web.mappers.PostMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,29 +15,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/posts")
-public class PostController {
+class PostController {
     private static final Logger log = LoggerFactory.getLogger(PostController.class);
     private final PostService postService;
+    private final ApplicationProperties properties;
 
-    public PostController(PostService postService) {
+    PostController(PostService postService, ApplicationProperties properties) {
         this.postService = postService;
+        this.properties = properties;
     }
 
     @GetMapping
-    public String getPosts(@RequestParam(name = "page", defaultValue = "1") int pageNo, Model model) {
+    String getPosts(@RequestParam(name = "page", defaultValue = "1") int pageNo, Model model) {
         log.info("Fetching posts for page: {}", pageNo);
-        PagedResult<PostEntity> pagedResult = postService.getPosts(pageNo);
-        PagedResult<PostDTO> pagedPostDTOs = pagedResult.map(PostMapper::toPost);
-        model.addAttribute("pagedResult", pagedPostDTOs);
+        PagedResult<Post> pagedResult = postService.getPosts(pageNo, properties.pageSize());
+        model.addAttribute("pagedResult", pagedResult);
         return "blog/posts";
     }
 
     @GetMapping("/{slug}")
-    public String getPostDetails(@PathVariable String slug, Model model) {
+    String getPostDetails(@PathVariable String slug, Model model) {
         log.info("Fetching post details for slug: {}", slug);
-        PostEntity postEntity = postService.getPostBySlug(slug);
-        PostDTO postDTO = PostMapper.toPost(postEntity);
-        model.addAttribute("post", postDTO);
+        Post post = postService.getPostBySlug(slug);
+        model.addAttribute("post", post);
         return "blog/post-details";
     }
 }
