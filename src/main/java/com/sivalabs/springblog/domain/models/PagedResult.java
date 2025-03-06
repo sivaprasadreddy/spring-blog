@@ -2,7 +2,6 @@ package com.sivalabs.springblog.domain.models;
 
 import java.util.List;
 import java.util.function.Function;
-import org.springframework.data.domain.Page;
 
 public record PagedResult<T>(
         List<T> data,
@@ -14,16 +13,18 @@ public record PagedResult<T>(
         boolean hasNext,
         boolean hasPrevious) {
 
-    public static <T> PagedResult<T> from(Page<T> page) {
-        return new PagedResult<>(
-                page.getContent(),
-                page.getTotalElements(),
-                page.getNumber() + 1,
-                page.getTotalPages(),
-                page.isFirst(),
-                page.isLast(),
-                page.hasNext(),
-                page.hasPrevious());
+    public static <T> PagedResult<T> empty() {
+        return new PagedResult<>(List.of(), 0, 1, 0, false, false, false, false);
+    }
+
+    public static <T> PagedResult<T> of(List<T> data, int pageNo, int pageSize, long totalElements) {
+        int totalPages = (int) Math.ceil((double) totalElements / pageSize);
+        boolean isFirst = pageNo == 1;
+        boolean isLast = pageNo == totalPages || totalPages == 0;
+        boolean hasNext = pageNo < totalPages;
+        boolean hasPrevious = pageNo > 1;
+
+        return new PagedResult<>(data, totalElements, pageNo, totalPages, isFirst, isLast, hasNext, hasPrevious);
     }
 
     public <R> PagedResult<R> map(Function<T, R> converter) {

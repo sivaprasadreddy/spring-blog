@@ -12,6 +12,10 @@ public class Comment {
 
     public Comment() {}
 
+    public Comment(Long id) {
+        this.id = id;
+    }
+
     public Comment(Long id, String name, String content, Long postId, Long createdUserId, LocalDateTime createdDate) {
         this.id = id;
         this.name = name;

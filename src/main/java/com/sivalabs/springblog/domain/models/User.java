@@ -9,6 +9,10 @@ public class User {
 
     public User() {}
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     public User(Long id, String email, String password, String name, Role role) {
         this.id = id;
         this.email = email;
