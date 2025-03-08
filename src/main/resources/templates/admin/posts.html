@@ -9,38 +9,59 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <!-- Alert Messages -->
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${message}">Success message</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}">Error message</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>All Posts</h1>
-        <a th:href="@{/admin}" class="btn btn-secondary">Back to Dashboard</a>
+        <div>
+            <button id="deleteSelectedBtn" class="btn btn-danger me-2" disabled>Delete Selected</button>
+            <a th:href="@{/admin}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
     </div>
 
     <!-- Posts Table -->
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Slug</th>
-                    <th>Category</th>
-                    <th>Status</th>
-                    <th>Created By</th>
-                    <th>Created Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="post : ${pagedResult.data}">
-                    <td th:text="${post.id}">1</td>
-                    <td th:text="${post.title}">Post Title</td>
-                    <td th:text="${post.slug}">post-slug</td>
-                    <td th:text="${post.category != null ? post.category.name : 'Uncategorized'}">Category</td>
-                    <td th:text="${post.status}">PUBLISHED</td>
-                    <td th:text="${post.createdBy != null ? post.createdBy.name : 'Unknown'}">Author</td>
-                    <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm')}">2023-01-01</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <form id="deletePostsForm" th:action="@{/admin/posts/delete}" method="post">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" class="form-check-input">
+                        </th>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="post : ${pagedResult.data}">
+                        <td>
+                            <input type="checkbox" name="postIds" th:value="${post.id}" class="form-check-input post-checkbox">
+                        </td>
+                        <td th:text="${post.id}">1</td>
+                        <td th:text="${post.title}">Post Title</td>
+                        <td th:text="${post.slug}">post-slug</td>
+                        <td th:text="${post.category != null ? post.category.name : 'Uncategorized'}">Category</td>
+                        <td th:text="${post.status}">PUBLISHED</td>
+                        <td th:text="${post.createdBy != null ? post.createdBy.name : 'Unknown'}">Author</td>
+                        <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm')}">2023-01-01</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
 
     <!-- Pagination -->
     <div>
@@ -61,6 +82,59 @@
             </li>
         </ul>
     </div>
+
+    <!-- JavaScript for checkbox and delete functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const postCheckboxes = document.querySelectorAll('.post-checkbox');
+            const deleteButton = document.getElementById('deleteSelectedBtn');
+            const deleteForm = document.getElementById('deletePostsForm');
+
+            // Function to update delete button state
+            function updateDeleteButtonState() {
+                const checkedBoxes = document.querySelectorAll('.post-checkbox:checked');
+                deleteButton.disabled = checkedBoxes.length === 0;
+            }
+
+            // Select All checkbox functionality
+            selectAllCheckbox.addEventListener('change', function() {
+                postCheckboxes.forEach(checkbox => {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+                updateDeleteButtonState();
+            });
+
+            // Individual checkbox change event
+            postCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    // Update "Select All" checkbox
+                    const allChecked = document.querySelectorAll('.post-checkbox:checked').length === postCheckboxes.length;
+                    selectAllCheckbox.checked = allChecked;
+
+                    updateDeleteButtonState();
+                });
+            });
+
+            // Delete button click event
+            deleteButton.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const checkedBoxes = document.querySelectorAll('.post-checkbox:checked');
+                if (checkedBoxes.length === 0) {
+                    alert('Please select at least one post to delete.');
+                    return;
+                }
+
+                if (confirm('Are you sure you want to delete the selected posts? This action cannot be undone.')) {
+                    deleteForm.submit();
+                }
+            });
+
+            // Initial button state
+            updateDeleteButtonState();
+        });
+    </script>
 </div>
 </body>
 </html>

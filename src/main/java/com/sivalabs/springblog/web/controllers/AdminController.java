@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin")
@@ -64,5 +66,19 @@ public class AdminController {
         List<Category> categories = categoryRepository.findAll();
         model.addAttribute("categories", categories);
         return "admin/categories";
+    }
+
+    @PostMapping("/posts/delete")
+    public String deleteSelectedPosts(
+            @RequestParam(value = "postIds", required = false) List<Long> postIds,
+            RedirectAttributes redirectAttributes) {
+        log.info("Deleting posts with IDs: {}", postIds);
+        if (postIds != null && !postIds.isEmpty()) {
+            postService.deletePostsByIds(postIds);
+            redirectAttributes.addFlashAttribute("message", "Selected posts have been deleted successfully");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No posts selected for deletion");
+        }
+        return "redirect:/admin/posts";
     }
 }

@@ -4,6 +4,7 @@ import com.sivalabs.springblog.domain.data.PostRepository;
 import com.sivalabs.springblog.domain.models.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.jdbc.core.RowMapper;
@@ -85,6 +86,23 @@ public class JdbcPostRepository implements PostRepository {
             WHERE p.slug = ?
             """;
         return jdbcClient.sql(sql).param(slug).query(new PostRowMapper()).optional();
+    }
+
+    @Override
+    public void deletePostsByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+
+        // Create placeholders for the IN clause (?, ?, ?)
+        String placeholders = String.join(",", ids.stream().map(id -> "?").toList());
+        String sql = "DELETE FROM posts WHERE id IN (" + placeholders + ")";
+
+        var spec = jdbcClient.sql(sql);
+        for (Long id : ids) {
+            spec = spec.param(id);
+        }
+        spec.update();
     }
 
     static class PostRowMapper implements RowMapper<Post> {

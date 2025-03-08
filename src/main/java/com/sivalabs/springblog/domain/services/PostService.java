@@ -4,6 +4,7 @@ import com.sivalabs.springblog.domain.data.PostRepository;
 import com.sivalabs.springblog.domain.exceptions.ResourceNotFoundException;
 import com.sivalabs.springblog.domain.models.PagedResult;
 import com.sivalabs.springblog.domain.models.Post;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,5 +25,12 @@ public class PostService {
         return postRepository
                 .findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with slug: " + slug));
+    }
+
+    @Transactional
+    public void deletePostsByIds(List<Long> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            postRepository.deletePostsByIds(ids);
+        }
     }
 }
