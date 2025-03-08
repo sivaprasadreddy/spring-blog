@@ -58,6 +58,12 @@ public class JdbcCommentRepository implements CommentRepository {
         jdbcClient.sql(sql).param(id).update();
     }
 
+    @Override
+    public List<Comment> findAll() {
+        String sql = "select * from comments order by created_date desc";
+        return jdbcClient.sql(sql).query(new CommentRowMapper()).list();
+    }
+
     static class CommentRowMapper implements RowMapper<Comment> {
         @Override
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
