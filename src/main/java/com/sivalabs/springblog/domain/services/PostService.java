@@ -1,7 +1,11 @@
 package com.sivalabs.springblog.domain.services;
 
+import com.sivalabs.springblog.domain.data.CategoryRepository;
+import com.sivalabs.springblog.domain.data.CommentRepository;
 import com.sivalabs.springblog.domain.data.PostRepository;
 import com.sivalabs.springblog.domain.exceptions.ResourceNotFoundException;
+import com.sivalabs.springblog.domain.models.Category;
+import com.sivalabs.springblog.domain.models.Comment;
 import com.sivalabs.springblog.domain.models.PagedResult;
 import com.sivalabs.springblog.domain.models.Post;
 import java.util.List;
@@ -12,9 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final CategoryRepository categoryRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(
+            PostRepository postRepository, CommentRepository commentRepository, CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public PagedResult<Post> getPosts(int pageNo, int pageSize) {
@@ -32,5 +41,18 @@ public class PostService {
         if (ids != null && !ids.isEmpty()) {
             postRepository.deletePostsByIds(ids);
         }
+    }
+
+    @Transactional
+    public void deleteCommentsByIds(List<Long> commentIds) {
+        commentRepository.deleteCommentsByIds(commentIds);
+    }
+
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    public List<Comment> findAllComments() {
+        return commentRepository.findAll();
     }
 }

@@ -64,6 +64,23 @@ public class JdbcCommentRepository implements CommentRepository {
         return jdbcClient.sql(sql).query(new CommentRowMapper()).list();
     }
 
+    @Override
+    public void deleteCommentsByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+
+        // Create placeholders for the IN clause (?, ?, ?)
+        String placeholders = String.join(",", ids.stream().map(id -> "?").toList());
+        String sql = "delete from comments where id IN (" + placeholders + ")";
+
+        var spec = jdbcClient.sql(sql);
+        for (Long id : ids) {
+            spec = spec.param(id);
+        }
+        spec.update();
+    }
+
     static class CommentRowMapper implements RowMapper<Comment> {
         @Override
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {

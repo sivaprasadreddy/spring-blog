@@ -1,8 +1,6 @@
 package com.sivalabs.springblog.web.controllers;
 
 import com.sivalabs.springblog.ApplicationProperties;
-import com.sivalabs.springblog.domain.data.CategoryRepository;
-import com.sivalabs.springblog.domain.data.CommentRepository;
 import com.sivalabs.springblog.domain.models.Category;
 import com.sivalabs.springblog.domain.models.Comment;
 import com.sivalabs.springblog.domain.models.PagedResult;
@@ -24,18 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
     private final PostService postService;
-    private final CommentRepository commentRepository;
-    private final CategoryRepository categoryRepository;
     private final ApplicationProperties properties;
 
-    public AdminController(
-            PostService postService,
-            CommentRepository commentRepository,
-            CategoryRepository categoryRepository,
-            ApplicationProperties properties) {
+    public AdminController(PostService postService, ApplicationProperties properties) {
         this.postService = postService;
-        this.commentRepository = commentRepository;
-        this.categoryRepository = categoryRepository;
         this.properties = properties;
     }
 
@@ -55,7 +45,7 @@ public class AdminController {
     @GetMapping("/comments")
     public String getAllComments(Model model) {
         log.info("Fetching all comments for admin view");
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = postService.findAllComments();
         model.addAttribute("comments", comments);
         return "admin/comments";
     }
@@ -63,7 +53,7 @@ public class AdminController {
     @GetMapping("/categories")
     public String getAllCategories(Model model) {
         log.info("Fetching all categories for admin view");
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = postService.findAllCategories();
         model.addAttribute("categories", categories);
         return "admin/categories";
     }
@@ -80,5 +70,19 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "No posts selected for deletion");
         }
         return "redirect:/admin/posts";
+    }
+
+    @PostMapping("/comments/delete")
+    public String deleteSelectedComments(
+            @RequestParam(value = "commentIds", required = false) List<Long> commentIds,
+            RedirectAttributes redirectAttributes) {
+        log.info("Deleting comments with IDs: {}", commentIds);
+        if (commentIds != null && !commentIds.isEmpty()) {
+            postService.deleteCommentsByIds(commentIds);
+            redirectAttributes.addFlashAttribute("message", "Selected comments have been deleted successfully");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No comments selected for deletion");
+        }
+        return "redirect:/admin/comments";
     }
 }
