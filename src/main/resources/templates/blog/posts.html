@@ -9,9 +9,6 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <h1>Posts</h1>
-
-    <!-- List of Posts -->
     <div class="row row-cols-1">
         <div class="col mb-3" th:each="post : ${pagedResult.data}">
             <div class="card h-100">
@@ -32,21 +29,38 @@
     </div>
 
     <!-- Pagination -->
-    <div>
+    <div class="d-flex justify-content-center">
         <ul class="pagination">
-            <!-- Previous Button -->
-            <li th:if="${pagedResult.hasPrevious}" class="page-item">
-                <a th:href="@{'/posts?page=' + ${pagedResult.pageNumber - 1}}" class="page-link">Previous</a>
+            <!-- First Button -->
+            <li class="page-item" th:classappend="${pagedResult.isFirst} ? 'disabled' : ''">
+                <a th:href="@{'/posts?page=1'}" class="page-link" th:tabindex="${pagedResult.isFirst} ? '-1' : '0'" 
+                   th:aria-disabled="${pagedResult.isFirst} ? 'true' : 'false'">First</a>
             </li>
 
-            <!-- Page Numbers -->
-            <li th:each="i : ${#numbers.sequence(1, pagedResult.totalPages)}" class="page-item" th:classappend="${i == pagedResult.pageNumber} ? 'active'">
-                <a th:href="@{'/posts?page=' + ${i}}" class="page-link" th:text="${i}">1</a>
+            <!-- Previous Button -->
+            <li class="page-item" th:classappend="${!pagedResult.hasPrevious} ? 'disabled' : ''">
+                <a th:href="@{'/posts?page=' + ${pagedResult.pageNumber - 1}}" class="page-link" 
+                   th:tabindex="${!pagedResult.hasPrevious} ? '-1' : '0'" 
+                   th:aria-disabled="${!pagedResult.hasPrevious} ? 'true' : 'false'">Previous</a>
+            </li>
+
+            <!-- Page Info -->
+            <li class="page-item disabled">
+                <span class="page-link">Page [[${pagedResult.pageNumber}]] of [[${pagedResult.totalPages}]]</span>
             </li>
 
             <!-- Next button -->
-            <li th:if="${pagedResult.hasNext}" class="page-item">
-                <a th:href="@{'/posts?page=' + ${pagedResult.pageNumber + 1}}" class="page-link">Next</a>
+            <li class="page-item" th:classappend="${!pagedResult.hasNext} ? 'disabled' : ''">
+                <a th:href="@{'/posts?page=' + ${pagedResult.pageNumber + 1}}" class="page-link" 
+                   th:tabindex="${!pagedResult.hasNext} ? '-1' : '0'" 
+                   th:aria-disabled="${!pagedResult.hasNext} ? 'true' : 'false'">Next</a>
+            </li>
+
+            <!-- Last Button -->
+            <li class="page-item" th:classappend="${pagedResult.isLast} ? 'disabled' : ''">
+                <a th:href="@{'/posts?page=' + ${pagedResult.totalPages}}" class="page-link" 
+                   th:tabindex="${pagedResult.isLast} ? '-1' : '0'" 
+                   th:aria-disabled="${pagedResult.isLast} ? 'true' : 'false'">Last</a>
             </li>
         </ul>
     </div>
