@@ -12,19 +12,20 @@
     <h1>Posts</h1>
 
     <!-- List of Posts -->
-    <div class="row row-cols-1 row-cols-md-3">
+    <div class="row row-cols-1">
         <div class="col mb-3" th:each="post : ${pagedResult.data}">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${post.title}">Post Title</h5>
+                    <h4 class="card-title">
+                        <a th:href="@{'/posts/' + ${post.slug}}" th:text="${post.title}" style="text-decoration: none;">Post Title</a>
+                    </h4>
                     <p class="card-text" th:text="${post.shortDescription}">Short Description</p>
-                </div>
-                <div class="card-footer" style="background: transparent; border-top: 0;">
-                    <div class="d-grid gap-2">
-                        <a th:href="@{'/posts/' + ${post.slug}}" class="btn btn-primary">
-                            Read More
-                        </a>
-                    </div>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            By <span th:text="${post.createdBy.name}">Author Name</span> 
+                            on <span th:text="${#temporals.format(post.createdDate, 'dd MMM yyyy HH:mm')}">Posted Date</span>
+                        </small>
+                    </p>
                 </div>
             </div>
         </div>
