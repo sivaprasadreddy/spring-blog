@@ -6,6 +6,30 @@
       layout:decorate="~{layout/layout}">
 <head>
     <title>Admin - Create Post</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleInput = document.getElementById('title');
+            const slugInput = document.getElementById('slug');
+
+            titleInput.addEventListener('input', function() {
+                // Convert title to slug format
+                const titleValue = this.value;
+                const slugValue = titleValue
+                    .toLowerCase()
+                    .replace(/[^\w\s-]/g, '') // Remove special characters
+                    .replace(/\s+/g, '-')     // Replace spaces with hyphens
+                    .replace(/-+/g, '-')      // Replace multiple hyphens with single hyphen
+                    .trim();                  // Trim leading/trailing spaces
+
+                // Set the slug value
+                slugInput.value = slugValue;
+
+                // Trigger change event for Thymeleaf binding
+                const event = new Event('change', { bubbles: true });
+                slugInput.dispatchEvent(event);
+            });
+        });
+    </script>
 </head>
 <body>
 <div layout:fragment="content">
