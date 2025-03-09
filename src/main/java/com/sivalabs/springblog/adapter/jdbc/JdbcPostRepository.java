@@ -123,8 +123,8 @@ public class JdbcPostRepository implements PostRepository {
     public void update(Post post) {
         String sql =
                 """
-                update posts set title = :title, slug = :slug, short_description = :short_description, 
-                content_markdown = :content_markdown, content_html = :content_html, 
+                update posts set title = :title, slug = :slug, short_description = :short_description,
+                content_markdown = :content_markdown, content_html = :content_html,
                 status = :status, category_id = :category_id
                 where id = :id
                 """;

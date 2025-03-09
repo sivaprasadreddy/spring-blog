@@ -8,29 +8,21 @@ import com.sivalabs.springblog.domain.services.MarkdownUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 
 public class CreatePostForm {
-    @NotBlank(message = "Title is required")
-    @Size(min = 3, max = 255, message = "Title must be between 3 and 255 characters")
-    private String title;
+    @NotBlank(message = "Title is required") @Size(min = 3, max = 255, message = "Title must be between 3 and 255 characters") private String title;
 
-    @NotBlank(message = "Slug is required")
-    private String slug;
+    @NotBlank(message = "Slug is required") private String slug;
 
-    @NotBlank(message = "Short description is required")
-    private String shortDescription;
+    @NotBlank(message = "Short description is required") private String shortDescription;
 
-    @NotBlank(message = "Content in Markdown format is required")
-    private String contentMarkdown;
+    @NotBlank(message = "Content in Markdown format is required") private String contentMarkdown;
 
-    @NotNull(message = "Category is required")
-    private Long categoryId;
+    @NotNull(message = "Category is required") private Long categoryId;
 
-    @NotNull(message = "Status is required")
-    private PostStatus status;
+    @NotNull(message = "Status is required") private PostStatus status;
 
     public CreatePostForm() {}
 

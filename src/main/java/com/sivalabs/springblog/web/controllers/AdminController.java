@@ -2,11 +2,11 @@ package com.sivalabs.springblog.web.controllers;
 
 import com.sivalabs.springblog.ApplicationProperties;
 import com.sivalabs.springblog.domain.models.*;
-import com.sivalabs.springblog.domain.services.MarkdownUtils;
 import com.sivalabs.springblog.domain.services.PostService;
 import com.sivalabs.springblog.web.forms.CreatePostForm;
 import com.sivalabs.springblog.web.forms.EditPostForm;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,10 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")

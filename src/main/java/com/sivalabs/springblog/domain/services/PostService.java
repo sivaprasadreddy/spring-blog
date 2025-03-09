@@ -8,7 +8,6 @@ import com.sivalabs.springblog.domain.models.Category;
 import com.sivalabs.springblog.domain.models.Comment;
 import com.sivalabs.springblog.domain.models.PagedResult;
 import com.sivalabs.springblog.domain.models.Post;
-import com.sivalabs.springblog.adapter.jdbc.JdbcPostRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +20,7 @@ public class PostService {
     private final CategoryRepository categoryRepository;
 
     public PostService(
-            PostRepository postRepository,
-            CommentRepository commentRepository,
-            CategoryRepository categoryRepository) {
+            PostRepository postRepository, CommentRepository commentRepository, CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.categoryRepository = categoryRepository;
