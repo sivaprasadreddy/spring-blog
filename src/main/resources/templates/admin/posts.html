@@ -44,6 +44,7 @@
                         <th>Status</th>
                         <th>Created By</th>
                         <th>Created Date</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,6 +59,9 @@
                         <td th:text="${post.status}">PUBLISHED</td>
                         <td th:text="${post.createdBy != null ? post.createdBy.name : 'Unknown'}">Author</td>
                         <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm')}">2023-01-01</td>
+                        <td>
+                            <a th:href="@{'/admin/posts/edit/' + ${post.id}}" class="btn btn-sm btn-primary">Edit</a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

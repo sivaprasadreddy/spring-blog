@@ -63,4 +63,15 @@ public class PostService {
     public void createPost(Post post) {
         postRepository.create(post);
     }
+
+    public Post getPostById(Long id) {
+        return postRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
+    }
+
+    @Transactional
+    public void updatePost(Post post) {
+        postRepository.update(post);
+    }
 }

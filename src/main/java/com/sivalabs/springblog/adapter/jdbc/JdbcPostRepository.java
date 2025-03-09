@@ -105,6 +105,42 @@ public class JdbcPostRepository implements PostRepository {
         spec.update();
     }
 
+    @Override
+    public Optional<Post> findById(Long id) {
+        String sql =
+                """
+            SELECT p.*, c.id as category_id, c.name as category_name, c.slug as category_slug,
+                   u.id as user_id, u.name as user_name, u.email as user_email, u.role as user_role
+            FROM posts p
+            JOIN categories c ON c.id = p.category_id
+            JOIN users u ON u.id = p.created_by
+            WHERE p.id = ?
+            """;
+        return jdbcClient.sql(sql).param(id).query(new PostRowMapper()).optional();
+    }
+
+    @Override
+    public void update(Post post) {
+        String sql =
+                """
+                update posts set title = :title, slug = :slug, short_description = :short_description, 
+                content_markdown = :content_markdown, content_html = :content_html, 
+                status = :status, category_id = :category_id
+                where id = :id
+                """;
+        jdbcClient
+                .sql(sql)
+                .param("title", post.getTitle())
+                .param("slug", post.getSlug())
+                .param("short_description", post.getShortDescription())
+                .param("content_markdown", post.getContentMarkdown())
+                .param("content_html", post.getContentHtml())
+                .param("status", post.getStatus().name())
+                .param("category_id", post.getCategory().getId())
+                .param("id", post.getId())
+                .update();
+    }
+
     static class PostRowMapper implements RowMapper<Post> {
         @Override
         public Post mapRow(ResultSet rs, int rowNum) throws SQLException {

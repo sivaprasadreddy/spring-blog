@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>Admin - Edit Post</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleInput = document.getElementById('title');
+            const slugInput = document.getElementById('slug');
+
+            titleInput.addEventListener('input', function() {
+                // Convert title to slug format
+                const titleValue = this.value;
+                const slugValue = titleValue
+                    .toLowerCase()
+                    .replace(/[^\w\s-]/g, '') // Remove special characters
+                    .replace(/\s+/g, '-')     // Replace spaces with hyphens
+                    .replace(/-+/g, '-')      // Replace multiple hyphens with single hyphen
+                    .trim();                  // Trim leading/trailing spaces
+
+                // Set the slug value
+                slugInput.value = slugValue;
+
+                // Trigger change event for Thymeleaf binding
+                const event = new Event('change', { bubbles: true });
+                slugInput.dispatchEvent(event);
+            });
+        });
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Alert Messages -->
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${message}">Success message</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}">Error message</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Edit Post</h1>
+        <div>
+            <a th:href="@{/admin/posts}" class="btn btn-secondary">Back to Posts</a>
+        </div>
+    </div>
+
+    <!-- Edit Post Form -->
+    <form th:action="@{/admin/posts/edit}" method="post" th:object="${post}">
+        <input type="hidden" th:field="*{id}">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" th:field="*{title}" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error message</div>
+        </div>
+        <div class="mb-3">
+            <label for="slug" class="form-label">Slug</label>
+            <input type="text" class="form-control" id="slug" th:field="*{slug}" th:classappend="${#fields.hasErrors('slug')} ? 'is-invalid'" required>
+            <div class="form-text">URL-friendly version of the title (e.g., "my-post-title")</div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('slug')}" th:errors="*{slug}">Slug error message</div>
+        </div>
+        <div class="mb-3">
+            <label for="shortDescription" class="form-label">Short Description</label>
+            <textarea class="form-control" id="shortDescription" th:field="*{shortDescription}" th:classappend="${#fields.hasErrors('shortDescription')} ? 'is-invalid'" rows="2" required></textarea>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('shortDescription')}" th:errors="*{shortDescription}">Short description error message</div>
+        </div>
+        <div class="mb-3">
+            <label for="contentMarkdown" class="form-label">Content (Markdown)</label>
+            <textarea class="form-control" id="contentMarkdown" th:field="*{contentMarkdown}" th:classappend="${#fields.hasErrors('contentMarkdown')} ? 'is-invalid'" rows="10" required></textarea>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('contentMarkdown')}" th:errors="*{contentMarkdown}">Content markdown error message</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="categoryId" class="form-label">Category</label>
+            <select class="form-select" id="categoryId" th:field="*{categoryId}" th:classappend="${#fields.hasErrors('categoryId')} ? 'is-invalid'" required>
+                <option value="">Select a category</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">Category Name</option>
+            </select>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">Category error message</div>
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" th:field="*{status}" th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'" required>
+                <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}">Status</option>
+            </select>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Status error message</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Post</button>
+    </form>
+</div>
+</body>
+</html>

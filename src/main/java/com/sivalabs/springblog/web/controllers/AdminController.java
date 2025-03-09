@@ -5,6 +5,7 @@ import com.sivalabs.springblog.domain.models.*;
 import com.sivalabs.springblog.domain.services.MarkdownUtils;
 import com.sivalabs.springblog.domain.services.PostService;
 import com.sivalabs.springblog.web.forms.CreatePostForm;
+import com.sivalabs.springblog.web.forms.EditPostForm;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,6 +117,39 @@ public class AdminController {
 
         postService.createPost(post);
         redirectAttributes.addFlashAttribute("message", "Post created successfully");
+        return "redirect:/admin/posts";
+    }
+
+    @GetMapping("/posts/edit/{id}")
+    public String showEditPostForm(@PathVariable Long id, Model model) {
+        log.info("Showing edit post form for post with ID: {}", id);
+        Post post = postService.getPostById(id);
+        EditPostForm form = new EditPostForm(post);
+
+        model.addAttribute("post", form);
+        model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("statuses", PostStatus.values());
+        return "admin/edit-post";
+    }
+
+    @PostMapping("/posts/edit")
+    public String updatePost(
+            @ModelAttribute("post") @Valid EditPostForm form,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        log.info("Updating post with ID: {}", form.getId());
+
+        if (bindingResult.hasErrors()) {
+            log.info("Validation errors in post edit form");
+            model.addAttribute("categories", postService.findAllCategories());
+            model.addAttribute("statuses", PostStatus.values());
+            return "admin/edit-post";
+        }
+
+        Post post = form.toPost();
+        postService.updatePost(post);
+        redirectAttributes.addFlashAttribute("message", "Post updated successfully");
         return "redirect:/admin/posts";
     }
 }
