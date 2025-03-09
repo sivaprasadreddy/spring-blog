@@ -26,7 +26,7 @@ $ docker compose version
 ## Tech Stack:
 * Java
 * Spring Boot
-* Spring Data JPA
+* Spring JdbcClient
 * Spring Security
 * PostgreSQL
 * Flyway

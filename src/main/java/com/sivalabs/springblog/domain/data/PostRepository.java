@@ -12,4 +12,6 @@ public interface PostRepository {
     Optional<Post> findBySlug(String slug);
 
     void deletePostsByIds(List<Long> ids);
+
+    void create(Post post);
 }

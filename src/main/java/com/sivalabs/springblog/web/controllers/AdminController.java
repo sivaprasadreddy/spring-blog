@@ -1,21 +1,22 @@
 package com.sivalabs.springblog.web.controllers;
 
 import com.sivalabs.springblog.ApplicationProperties;
-import com.sivalabs.springblog.domain.models.Category;
-import com.sivalabs.springblog.domain.models.Comment;
-import com.sivalabs.springblog.domain.models.PagedResult;
-import com.sivalabs.springblog.domain.models.Post;
+import com.sivalabs.springblog.domain.models.*;
+import com.sivalabs.springblog.domain.services.MarkdownUtils;
 import com.sivalabs.springblog.domain.services.PostService;
-import java.util.List;
+import com.sivalabs.springblog.web.forms.CreatePostForm;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -84,5 +85,37 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "No comments selected for deletion");
         }
         return "redirect:/admin/comments";
+    }
+
+    @GetMapping("/posts/create")
+    public String showCreatePostForm(Model model) {
+        log.info("Showing create post form");
+        model.addAttribute("post", new CreatePostForm());
+        model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("statuses", PostStatus.values());
+        return "admin/create-post";
+    }
+
+    @PostMapping("/posts/create")
+    public String createPost(
+            @ModelAttribute("post") @Valid CreatePostForm form,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        log.info("Creating new post: {}", form.getTitle());
+
+        if (bindingResult.hasErrors()) {
+            log.info("Validation errors in post creation form");
+            model.addAttribute("categories", postService.findAllCategories());
+            model.addAttribute("statuses", PostStatus.values());
+            return "admin/create-post";
+        }
+
+        User user = new User(UserContextUtils.getCurrentUserIdOrThrow());
+        Post post = form.toPost(user);
+
+        postService.createPost(post);
+        redirectAttributes.addFlashAttribute("message", "Post created successfully");
+        return "redirect:/admin/posts";
     }
 }
