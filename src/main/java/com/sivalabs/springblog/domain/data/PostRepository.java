@@ -9,6 +9,8 @@ public interface PostRepository {
 
     PagedResult<Post> findAllPosts(int pageNo, int pageSize);
 
+    PagedResult<Post> findPostsByCategorySlug(String categorySlug, int pageNo, int pageSize);
+
     Optional<Post> findBySlug(String slug);
 
     Optional<Post> findById(Long id);

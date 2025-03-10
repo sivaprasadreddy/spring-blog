@@ -75,6 +75,39 @@ public class JdbcPostRepository implements PostRepository {
     }
 
     @Override
+    public PagedResult<Post> findPostsByCategorySlug(String categorySlug, int pageNo, int pageSize) {
+        String countSql = "SELECT count(*) FROM posts p JOIN categories c ON c.id = p.category_id WHERE c.slug = ?";
+        long totalElements =
+                jdbcClient.sql(countSql).param(categorySlug).query(Long.class).single();
+        if (totalElements == 0) {
+            return PagedResult.empty();
+        }
+
+        int offset = (pageNo - 1) * pageSize;
+
+        String sql =
+                """
+            SELECT p.*, c.id as category_id, c.name as category_name, c.slug as category_slug,
+                   u.id as user_id, u.name as user_name, u.email as user_email, u.role as user_role
+            FROM posts p
+            JOIN categories c ON c.id = p.category_id
+            JOIN users u ON u.id = p.created_by
+            WHERE c.slug = ?
+            ORDER BY created_date DESC LIMIT ? OFFSET ?
+            """;
+
+        var posts = jdbcClient
+                .sql(sql)
+                .param(categorySlug)
+                .param(pageSize)
+                .param(offset)
+                .query(new PostRowMapper())
+                .list();
+
+        return PagedResult.of(posts, pageNo, pageSize, totalElements);
+    }
+
+    @Override
     public Optional<Post> findBySlug(String slug) {
         String sql =
                 """

@@ -8,26 +8,47 @@
     <title th:text="${post.title}">Post Details</title>
 </head>
 <body>
-<div layout:fragment="content" class="container mt-4">
-    <!-- Post title -->
-    <h1 th:text="${post.title}" class="mb-4">Post Title</h1>
+<div layout:fragment="content">
+    <div class="row">
+        <!-- Main Content Column -->
+        <div class="col-md-9">
+            <!-- Post title -->
+            <h1 th:text="${post.title}" class="mb-4">Post Title</h1>
 
-    <!-- Date of creation and author -->
-    <p class="text-muted">
-        Created on
-        <span th:text="${post.createdDate}">2024-12-03</span>
-        by
-        <span th:text="${post.createdBy.name}">Author Name</span>
-    </p>
+            <!-- Date of creation and author -->
+            <p class="text-muted">
+                Created on
+                <span th:text="${post.createdDate}">2024-12-03</span>
+                by
+                <span th:text="${post.createdBy.name}">Author Name</span>
+            </p>
 
-    <!-- Post content -->
-    <div class="post-content mt-4">
-        <p th:utext="${post.contentHtml}">Post Content</p>
-    </div>
+            <!-- Post content -->
+            <div class="post-content mt-4">
+                <p th:utext="${post.contentHtml}">Post Content</p>
+            </div>
 
-    <!-- Button to return to the list of posts -->
-    <div class="mt-4">
-        <a th:href="@{/posts}" class="btn btn-primary">Back to Posts</a>
+            <!-- Button to return to the list of posts -->
+            <div class="mt-4">
+                <a th:href="@{/posts}" class="btn btn-primary">Back to Posts</a>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Categories</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2" th:each="category : ${categories}">
+                            <a th:href="@{'/posts/category/' + ${category.slug}}" th:text="${category.name}" class="text-decoration-none">Category Name</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

@@ -44,6 +44,12 @@ public class JdbcCategoryRepository implements CategoryRepository {
     }
 
     @Override
+    public Optional<Category> findBySlug(String slug) {
+        String sql = "select * from categories where slug = ?";
+        return jdbcClient.sql(sql).param(slug).query(new CategoryRowMapper()).optional();
+    }
+
+    @Override
     public List<Category> findAll() {
         String sql = "select * from categories order by name";
         return jdbcClient.sql(sql).query(new CategoryRowMapper()).list();

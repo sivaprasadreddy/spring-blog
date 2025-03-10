@@ -30,6 +30,10 @@ public class PostService {
         return postRepository.findAllPosts(pageNo, pageSize);
     }
 
+    public PagedResult<Post> getPostsByCategorySlug(String categorySlug, int pageNo, int pageSize) {
+        return postRepository.findPostsByCategorySlug(categorySlug, pageNo, pageSize);
+    }
+
     public Post getPostBySlug(String slug) {
         return postRepository
                 .findBySlug(slug)

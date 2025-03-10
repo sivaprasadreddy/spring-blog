@@ -9,6 +9,8 @@ public interface CategoryRepository {
 
     Optional<Category> findById(Long id);
 
+    Optional<Category> findBySlug(String slug);
+
     List<Category> findAll();
 
     void update(Category category);

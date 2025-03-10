@@ -9,60 +9,102 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="row row-cols-1">
-        <div class="col mb-3" th:each="post : ${pagedResult.data}">
-            <div class="card h-100">
+    <div class="row">
+        <!-- Main Content Column -->
+        <div class="col-md-9">
+            <div class="row row-cols-1">
+                <div class="col mb-3" th:each="post : ${pagedResult.data}">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a th:href="@{'/posts/' + ${post.slug}}" th:text="${post.title}" style="text-decoration: none;">Post Title</a>
+                            </h4>
+                            <p class="card-text" th:text="${post.shortDescription}">Short Description</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    By <span th:text="${post.createdBy.name}">Author Name</span> 
+                                    on <span th:text="${#temporals.format(post.createdDate, 'dd MMM yyyy HH:mm')}">Posted Date</span>
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <!-- First Button -->
+                    <li class="page-item" th:classappend="${pagedResult.isFirst} ? 'disabled' : ''">
+                        <a th:if="${categorySlug == null}" th:href="@{'/posts?page=1'}" 
+                           class="page-link" th:tabindex="${pagedResult.isFirst} ? '-1' : '0'" 
+                           th:aria-disabled="${pagedResult.isFirst} ? 'true' : 'false'">First</a>
+                        <a th:if="${categorySlug != null}" th:href="@{'/posts/category/' + ${categorySlug} + '?page=1'}" 
+                           class="page-link" th:tabindex="${pagedResult.isFirst} ? '-1' : '0'" 
+                           th:aria-disabled="${pagedResult.isFirst} ? 'true' : 'false'">First</a>
+                    </li>
+
+                    <!-- Previous Button -->
+                    <li class="page-item" th:classappend="${!pagedResult.hasPrevious} ? 'disabled' : ''">
+                        <a th:if="${categorySlug == null}" th:href="@{'/posts?page=' + ${pagedResult.pageNumber - 1}}" 
+                           class="page-link" 
+                           th:tabindex="${!pagedResult.hasPrevious} ? '-1' : '0'" 
+                           th:aria-disabled="${!pagedResult.hasPrevious} ? 'true' : 'false'">Previous</a>
+                        <a th:if="${categorySlug != null}" th:href="@{'/posts/category/' + ${categorySlug} + '?page=' + ${pagedResult.pageNumber - 1}}" 
+                           class="page-link" 
+                           th:tabindex="${!pagedResult.hasPrevious} ? '-1' : '0'" 
+                           th:aria-disabled="${!pagedResult.hasPrevious} ? 'true' : 'false'">Previous</a>
+                    </li>
+
+                    <!-- Page Info -->
+                    <li class="page-item disabled">
+                        <span class="page-link">Page [[${pagedResult.pageNumber}]] of [[${pagedResult.totalPages}]]</span>
+                    </li>
+
+                    <!-- Next button -->
+                    <li class="page-item" th:classappend="${!pagedResult.hasNext} ? 'disabled' : ''">
+                        <a th:if="${categorySlug == null}" th:href="@{'/posts?page=' + ${pagedResult.pageNumber + 1}}" 
+                           class="page-link" 
+                           th:tabindex="${!pagedResult.hasNext} ? '-1' : '0'" 
+                           th:aria-disabled="${!pagedResult.hasNext} ? 'true' : 'false'">Next</a>
+                        <a th:if="${categorySlug != null}" th:href="@{'/posts/category/' + ${categorySlug} + '?page=' + ${pagedResult.pageNumber + 1}}" 
+                           class="page-link" 
+                           th:tabindex="${!pagedResult.hasNext} ? '-1' : '0'" 
+                           th:aria-disabled="${!pagedResult.hasNext} ? 'true' : 'false'">Next</a>
+                    </li>
+
+                    <!-- Last Button -->
+                    <li class="page-item" th:classappend="${pagedResult.isLast} ? 'disabled' : ''">
+                        <a th:if="${categorySlug == null}" th:href="@{'/posts?page=' + ${pagedResult.totalPages}}" 
+                           class="page-link" 
+                           th:tabindex="${pagedResult.isLast} ? '-1' : '0'" 
+                           th:aria-disabled="${pagedResult.isLast} ? 'true' : 'false'">Last</a>
+                        <a th:if="${categorySlug != null}" th:href="@{'/posts/category/' + ${categorySlug} + '?page=' + ${pagedResult.totalPages}}" 
+                           class="page-link" 
+                           th:tabindex="${pagedResult.isLast} ? '-1' : '0'" 
+                           th:aria-disabled="${pagedResult.isLast} ? 'true' : 'false'">Last</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Categories</h5>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title">
-                        <a th:href="@{'/posts/' + ${post.slug}}" th:text="${post.title}" style="text-decoration: none;">Post Title</a>
-                    </h4>
-                    <p class="card-text" th:text="${post.shortDescription}">Short Description</p>
-                    <p class="card-text">
-                        <small class="text-muted">
-                            By <span th:text="${post.createdBy.name}">Author Name</span> 
-                            on <span th:text="${#temporals.format(post.createdDate, 'dd MMM yyyy HH:mm')}">Posted Date</span>
-                        </small>
-                    </p>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2" th:each="category : ${categories}">
+                            <a th:href="@{'/posts/category/' + ${category.slug}}" 
+                               th:text="${category.name}" 
+                               th:class="${categorySlug != null && categorySlug == category.slug} ? 'text-decoration-none fw-bold text-primary' : 'text-decoration-none'">Category Name</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center">
-        <ul class="pagination">
-            <!-- First Button -->
-            <li class="page-item" th:classappend="${pagedResult.isFirst} ? 'disabled' : ''">
-                <a th:href="@{'/posts?page=1'}" class="page-link" th:tabindex="${pagedResult.isFirst} ? '-1' : '0'" 
-                   th:aria-disabled="${pagedResult.isFirst} ? 'true' : 'false'">First</a>
-            </li>
-
-            <!-- Previous Button -->
-            <li class="page-item" th:classappend="${!pagedResult.hasPrevious} ? 'disabled' : ''">
-                <a th:href="@{'/posts?page=' + ${pagedResult.pageNumber - 1}}" class="page-link" 
-                   th:tabindex="${!pagedResult.hasPrevious} ? '-1' : '0'" 
-                   th:aria-disabled="${!pagedResult.hasPrevious} ? 'true' : 'false'">Previous</a>
-            </li>
-
-            <!-- Page Info -->
-            <li class="page-item disabled">
-                <span class="page-link">Page [[${pagedResult.pageNumber}]] of [[${pagedResult.totalPages}]]</span>
-            </li>
-
-            <!-- Next button -->
-            <li class="page-item" th:classappend="${!pagedResult.hasNext} ? 'disabled' : ''">
-                <a th:href="@{'/posts?page=' + ${pagedResult.pageNumber + 1}}" class="page-link" 
-                   th:tabindex="${!pagedResult.hasNext} ? '-1' : '0'" 
-                   th:aria-disabled="${!pagedResult.hasNext} ? 'true' : 'false'">Next</a>
-            </li>
-
-            <!-- Last Button -->
-            <li class="page-item" th:classappend="${pagedResult.isLast} ? 'disabled' : ''">
-                <a th:href="@{'/posts?page=' + ${pagedResult.totalPages}}" class="page-link" 
-                   th:tabindex="${pagedResult.isLast} ? '-1' : '0'" 
-                   th:aria-disabled="${pagedResult.isLast} ? 'true' : 'false'">Last</a>
-            </li>
-        </ul>
     </div>
 </div>
 </body>

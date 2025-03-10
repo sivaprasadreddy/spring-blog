@@ -30,6 +30,18 @@ class PostController {
         log.info("Fetching posts for page: {}", pageNo);
         PagedResult<Post> pagedResult = postService.getPosts(pageNo, properties.pageSize());
         model.addAttribute("pagedResult", pagedResult);
+        model.addAttribute("categories", postService.findAllCategories());
+        return "blog/posts";
+    }
+
+    @GetMapping("/category/{slug}")
+    String getPostsByCategory(
+            @PathVariable String slug, @RequestParam(name = "page", defaultValue = "1") int pageNo, Model model) {
+        log.info("Fetching posts for category slug: {} and page: {}", slug, pageNo);
+        PagedResult<Post> pagedResult = postService.getPostsByCategorySlug(slug, pageNo, properties.pageSize());
+        model.addAttribute("pagedResult", pagedResult);
+        model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("categorySlug", slug);
         return "blog/posts";
     }
 
@@ -38,6 +50,7 @@ class PostController {
         log.info("Fetching post details for slug: {}", slug);
         Post post = postService.getPostBySlug(slug);
         model.addAttribute("post", post);
+        model.addAttribute("categories", postService.findAllCategories());
         return "blog/post-details";
     }
 }
