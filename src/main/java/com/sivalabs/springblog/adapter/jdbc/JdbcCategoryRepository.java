@@ -2,6 +2,7 @@ package com.sivalabs.springblog.adapter.jdbc;
 
 import com.sivalabs.springblog.domain.data.CategoryRepository;
 import com.sivalabs.springblog.domain.models.Category;
+import com.sivalabs.springblog.domain.services.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -34,6 +35,17 @@ public class JdbcCategoryRepository implements CategoryRepository {
                 .param("slug", category.getSlug())
                 .update(keyHolder);
         category.setId(keyHolder.getKeyAs(Long.class));
+        return category;
+    }
+
+    @Override
+    public Category getOrCreateCategoryByName(String name) {
+        String slug = StringUtils.toSlug(name);
+        Category category = findBySlug(slug).orElse(null);
+        if (category == null) {
+            category = new Category(null, name, slug);
+            category = create(category);
+        }
         return category;
     }
 

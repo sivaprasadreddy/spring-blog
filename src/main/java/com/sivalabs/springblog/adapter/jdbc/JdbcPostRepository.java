@@ -20,7 +20,7 @@ public class JdbcPostRepository implements PostRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public void create(Post post) {
+    public Long create(Post post) {
         String sql =
                 """
                 insert into posts (title, slug, short_description, content_markdown,
@@ -42,6 +42,7 @@ public class JdbcPostRepository implements PostRepository {
                 .param("created_by", post.getCreatedBy().getId())
                 .update(keyHolder);
         post.setId(keyHolder.getKeyAs(Long.class));
+        return post.getId();
     }
 
     @Override
@@ -214,6 +215,25 @@ public class JdbcPostRepository implements PostRepository {
                 .param("category_id", post.getCategory().getId())
                 .param("id", post.getId())
                 .update();
+    }
+
+    @Override
+    public void addPostTags(Long postId, Set<Tag> tags) {
+        String sql =
+                """
+                insert into post_tags (post_id, tag_id)
+                values (:post_id, :tag_id)
+                """;
+        tags.forEach(tag -> jdbcClient
+                .sql(sql)
+                .param("post_id", postId)
+                .param("tag_id", tag.getId())
+                .update());
+    }
+
+    @Override
+    public Long findPostsCount() {
+        return jdbcClient.sql("SELECT count(*) FROM posts").query(Long.class).single();
     }
 
     static class PostRowMapper implements RowMapper<Post> {

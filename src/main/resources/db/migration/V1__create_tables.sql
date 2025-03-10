@@ -37,9 +37,9 @@ CREATE SEQUENCE post_id_seq START 100 INCREMENT BY 50;
 CREATE TABLE POSTS
 (
     id                BIGINT       NOT NULL DEFAULT nextval('post_id_seq'),
-    title             VARCHAR(255) NOT NULL UNIQUE,
-    slug              VARCHAR(255) NOT NULL UNIQUE,
-    short_description VARCHAR(255) NOT NULL,
+    title             VARCHAR(500) NOT NULL UNIQUE,
+    slug              VARCHAR(500) NOT NULL UNIQUE,
+    short_description VARCHAR(500) NOT NULL,
     content_markdown  TEXT         NOT NULL,
     content_html      TEXT         NOT NULL,
     status            VARCHAR(20)  NOT NULL CHECK (status IN ('DRAFT', 'PUBLISHED')),

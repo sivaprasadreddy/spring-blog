@@ -1,0 +1,124 @@
+{
+  "posts": [
+    {
+      "title": "Java Fundamentals: A Comprehensive Guide",
+      "slug": "java-fundamentals",
+      "shortDescription": "Java is one of the most popular programming languages in the world, known for its platform independence, robustness, and versatility. This article explores the fundamental concepts of Java programming that every developer should know.",
+      "markdownFile": "java-fundamentals.md",
+      "category": "Java",
+      "tags": ["Java"]
+    },
+    {
+      "title": "Docker Compose for Java Applications: Simplifying Multi-Container Deployments",
+      "slug": "docker-compose-for-java-applications",
+      "shortDescription": "Modern Java applications rarely run in isolation. They typically require databases, caching systems, message brokers, and other services to function properly. Managing these dependencies during development, testing, and production can be challenging. Docker Compose offers an elegant solution to this problem by allowing developers to define and run multi-container Docker applications with ease.",
+      "markdownFile": "docker-compose-for-java-applications.md",
+      "category": "Docker",
+      "tags": ["Docker", "Java"]
+    },
+    {
+      "title": "Docker for Java Developers",
+      "slug": "docker-for-java-developers",
+      "shortDescription": "Docker has revolutionized how developers build, ship, and run applications. For Java developers, Docker offers a consistent environment across development, testing, and production, simplifying dependency management and deployment.",
+      "markdownFile": "docker-for-java-developers.md",
+      "category": "Docker",
+      "tags": ["Docker", "Java"]
+    },
+    {
+      "title": "IntelliJ IDEA Plugins for Java",
+      "slug": "intellij-idea-plugins-for-java",
+      "shortDescription": "IntelliJ IDEA is one of the most powerful and popular IDEs for Java development. Its functionality can be extended even further with plugins that enhance productivity, code quality, and developer experience.",
+      "markdownFile": "intellij-idea-plugins-for-java.md",
+      "category": "IDE",
+      "tags": ["Java", "IntelliJ IDEA", "IDE", "Plugins"]
+    },
+    {
+      "title": "IntelliJ IDEA Productivity Tips",
+      "slug": "intellij-idea-productivity-tips",
+      "shortDescription": "IntelliJ IDEA is a powerful IDE that offers numerous features to boost developer productivity. Mastering these features can significantly improve your coding efficiency and make development more enjoyable.",
+      "markdownFile": "intellij-idea-productivity-tips.md",
+      "category": "IDE",
+      "tags": ["Java", "IntelliJ IDEA", "IDE", "Productivity"]
+    },
+    {
+      "title": "Java Concurrency",
+      "slug": "java-concurrency",
+      "shortDescription": "Concurrency is a fundamental concept in modern programming, especially for applications that need to perform multiple operations simultaneously. Java provides robust support for concurrent programming through its concurrency API.",
+      "markdownFile": "java-concurrency.md",
+      "category": "Java",
+      "tags": ["Java", "Concurrency", "Multithreading"]
+    },
+    {
+      "title": "Java Functional Programming",
+      "slug": "java-functional-programming",
+      "shortDescription": "Functional programming has gained significant popularity in recent years, and Java has embraced this paradigm with the introduction of lambda expressions and the Stream API in Java 8. This article explores how to leverage functional programming concepts in Java.",
+      "markdownFile": "java-functional-programming.md",
+      "category": "Java",
+      "tags": ["Java"]
+    },
+    {
+      "title": "JPA Advanced Concepts",
+      "slug": "jpa-advanced-concepts",
+      "shortDescription": "The Java Persistence API (JPA) is a powerful ORM framework that simplifies database operations in Java applications. While basic JPA usage is straightforward, mastering advanced concepts can significantly improve your application's performance and maintainability.",
+      "markdownFile": "jpa-advanced-concepts.md",
+      "category": "Java",
+      "tags": ["Java", "JPA", "Hibernate", "Database"]
+    },
+    {
+      "title": "JPA Introduction",
+      "slug": "jpa-introduction",
+      "shortDescription": "The Java Persistence API (JPA) is a specification that describes the management of relational data in Java applications. It provides a standard way to map Java objects to database tables and query them, abstracting away the complexities of JDBC.",
+      "markdownFile": "jpa-introduction.md",
+      "category": "Java",
+      "tags": ["Java", "JPA", "Hibernate", "Database"]
+    },
+    {
+      "title": "Spring Boot Actuator",
+      "slug": "spring-boot-actuator",
+      "shortDescription": "Spring Boot Actuator is a powerful feature that provides production-ready features to help monitor and manage your Spring Boot application. It offers several endpoints that expose operational information about your running application.",
+      "markdownFile": "spring-boot-actuator.md",
+      "category": "Spring",
+      "tags": ["Java", "Spring Boot", "Monitoring"]
+    },
+    {
+      "title": "Spring Boot Introduction",
+      "slug": "spring-boot-introduction",
+      "shortDescription": "Spring Boot is a framework that simplifies the development of Spring applications. It takes an opinionated view of the Spring platform, allowing developers to get started quickly with minimal configuration.",
+      "markdownFile": "spring-boot-introduction.md",
+      "category": "Spring",
+      "tags": ["Java", "Spring Boot", "Spring"]
+    },
+    {
+      "title": "Spring Boot Testing",
+      "slug": "spring-boot-testing",
+      "shortDescription": "Testing is a crucial part of software development, and Spring Boot provides excellent support for testing your applications. This article explores various testing strategies and tools available in the Spring Boot ecosystem.",
+      "markdownFile": "spring-boot-testing.md",
+      "category": "Spring",
+      "tags": ["Java", "Spring Boot", "Testing", "JUnit"]
+    },
+    {
+      "title": "Spring Data",
+      "slug": "spring-data",
+      "shortDescription": "Spring Data is a family of projects that simplifies data access in Spring applications. It provides a consistent programming model for various data access technologies, including relational databases, NoSQL stores, and more.",
+      "markdownFile": "spring-data.md",
+      "category": "Spring",
+      "tags": ["Java", "Spring", "Spring Data", "Database"]
+    },
+    {
+      "title": "Spring Framework Introduction",
+      "slug": "spring-framework-introduction",
+      "shortDescription": "The Spring Framework is a comprehensive programming and configuration model for modern Java-based enterprise applications. It provides infrastructure support at the application level, allowing developers to focus on business logic.",
+      "markdownFile": "spring-framework-introduction.md",
+      "category": "Spring",
+      "tags": ["Java", "Spring"]
+    },
+    {
+      "title": "Spring Security",
+      "slug": "spring-security",
+      "shortDescription": "Spring Security is a powerful and highly customizable authentication and access-control framework. It is the de-facto standard for securing Spring-based applications, providing comprehensive security services.",
+      "markdownFile": "spring-security.md",
+      "category": "Spring",
+      "tags": ["Java", "Spring", "Security"]
+    }
+  ]
+}

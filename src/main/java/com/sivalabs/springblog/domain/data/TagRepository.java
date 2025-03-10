@@ -9,7 +9,11 @@ import java.util.Set;
 public interface TagRepository {
     Tag create(Tag tag);
 
+    Tag getOrCreateTagByName(String name);
+
     Optional<Tag> findById(Long id);
+
+    Optional<Tag> findBySlug(String slug);
 
     List<Tag> findAll();
 

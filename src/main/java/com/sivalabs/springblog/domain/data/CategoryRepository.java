@@ -7,6 +7,8 @@ import java.util.Optional;
 public interface CategoryRepository {
     Category create(Category category);
 
+    Category getOrCreateCategoryByName(String name);
+
     Optional<Category> findById(Long id);
 
     Optional<Category> findBySlug(String slug);

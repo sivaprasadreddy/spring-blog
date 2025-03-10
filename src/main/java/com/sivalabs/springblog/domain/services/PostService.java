@@ -103,7 +103,9 @@ public class PostService {
 
     @Transactional
     public void createPost(Post post) {
-        postRepository.create(post);
+        var postId = postRepository.create(post);
+        Set<Tag> tags = post.getTags();
+        postRepository.addPostTags(postId, tags);
     }
 
     @Transactional
@@ -122,5 +124,19 @@ public class PostService {
             return Map.of();
         }
         return tagRepository.findTagsByPostIds(postIds);
+    }
+
+    @Transactional
+    public Category getOrCreateCategoryByName(String name) {
+        return categoryRepository.getOrCreateCategoryByName(name);
+    }
+
+    @Transactional
+    public Tag getOrCreateTagByName(String name) {
+        return tagRepository.getOrCreateTagByName(name);
+    }
+
+    public Long getPostsCount() {
+        return postRepository.findPostsCount();
     }
 }

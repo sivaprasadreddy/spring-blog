@@ -2,6 +2,7 @@ package com.sivalabs.springblog.adapter.jdbc;
 
 import com.sivalabs.springblog.domain.data.TagRepository;
 import com.sivalabs.springblog.domain.models.Tag;
+import com.sivalabs.springblog.domain.services.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -25,6 +26,11 @@ public class JdbcTagRepository implements TagRepository {
 
     @Override
     public Tag create(Tag tag) {
+        String slug = tag.getSlug();
+        if (slug == null) {
+            slug = StringUtils.toSlug(tag.getName());
+            tag.setSlug(slug);
+        }
         String sql =
                 """
                 insert into tags (name, slug)
@@ -42,9 +48,26 @@ public class JdbcTagRepository implements TagRepository {
     }
 
     @Override
+    public Tag getOrCreateTagByName(String name) {
+        String slug = StringUtils.toSlug(name);
+        Tag tag = findBySlug(slug).orElse(null);
+        if (tag == null) {
+            tag = new Tag(null, name, slug);
+            tag = create(tag);
+        }
+        return tag;
+    }
+
+    @Override
     public Optional<Tag> findById(Long id) {
         String sql = "select * from tags where id = ?";
         return jdbcClient.sql(sql).param(id).query(new TagRowMapper()).optional();
+    }
+
+    @Override
+    public Optional<Tag> findBySlug(String slug) {
+        String sql = "select * from tags where slug = ?";
+        return jdbcClient.sql(sql).param(slug).query(new TagRowMapper()).optional();
     }
 
     @Override
