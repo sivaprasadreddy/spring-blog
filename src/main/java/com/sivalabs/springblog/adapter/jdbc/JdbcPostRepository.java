@@ -177,6 +177,7 @@ public class JdbcPostRepository implements PostRepository {
     static class PostRowMapper implements RowMapper<Post> {
         @Override
         public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Long postId = rs.getLong("id");
             var category = new Category(
                     rs.getLong("category_id"), rs.getString("category_name"), rs.getString("category_slug"));
             var user = new User(
@@ -186,7 +187,7 @@ public class JdbcPostRepository implements PostRepository {
                     rs.getString("user_name"),
                     Role.valueOf(rs.getString("user_role")));
             return new Post(
-                    rs.getLong("id"),
+                    postId,
                     rs.getString("title"),
                     rs.getString("slug"),
                     rs.getString("short_description"),

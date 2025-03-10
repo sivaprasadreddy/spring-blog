@@ -4,8 +4,12 @@ import com.sivalabs.springblog.domain.data.TagRepository;
 import com.sivalabs.springblog.domain.models.Tag;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -71,6 +75,38 @@ public class JdbcTagRepository implements TagRepository {
         String sql = "delete from tags where id = ?";
         jdbcClient.sql(sql).param(id).update();
     }
+
+    @Override
+    public Map<Long, Set<Tag>> findTagsByPostIds(List<Long> postIds) {
+        if (postIds == null || postIds.isEmpty()) {
+            return Map.of();
+        }
+
+        String sql =
+                """
+            SELECT t.*, pt.post_id FROM tags t
+            JOIN post_tags pt ON t.id = pt.tag_id
+            WHERE pt.post_id IN (:postIds)
+            ORDER BY t.name
+            """;
+
+        List<TagWithPostId> tagsWithPostIds = jdbcClient
+                .sql(sql)
+                .param("postIds", postIds)
+                .query((rs, rowNum) -> new TagWithPostId(
+                        rs.getLong("id"), rs.getString("name"), rs.getString("slug"), rs.getLong("post_id")))
+                .list();
+
+        Map<Long, Set<Tag>> result = new HashMap<>();
+        for (TagWithPostId tagWithPostId : tagsWithPostIds) {
+            result.computeIfAbsent(tagWithPostId.postId(), k -> new HashSet<>())
+                    .add(new Tag(tagWithPostId.id(), tagWithPostId.name(), tagWithPostId.slug()));
+        }
+
+        return result;
+    }
+
+    record TagWithPostId(Long id, String name, String slug, Long postId) {}
 
     static class TagRowMapper implements RowMapper<Tag> {
         @Override

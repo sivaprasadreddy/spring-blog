@@ -41,6 +41,7 @@
                         <th>Title</th>
                         <th>Slug</th>
                         <th>Category</th>
+                        <th>Tags</th>
                         <th>Status</th>
                         <th>Created By</th>
                         <th>Created Date</th>
@@ -56,6 +57,9 @@
                         <td th:text="${post.title}">Post Title</td>
                         <td th:text="${post.slug}">post-slug</td>
                         <td th:text="${post.category != null ? post.category.name : 'Uncategorized'}">Category</td>
+                        <td>
+                            <span th:each="tag, iterStat : ${post.tags}" th:text="${iterStat.last ? tag.name : tag.name + ', '}">Tag</span>
+                        </td>
                         <td th:text="${post.status}">PUBLISHED</td>
                         <td th:text="${post.createdBy != null ? post.createdBy.name : 'Unknown'}">Author</td>
                         <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm')}">2023-01-01</td>

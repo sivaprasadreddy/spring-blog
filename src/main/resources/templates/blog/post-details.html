@@ -23,6 +23,12 @@
                 <span th:text="${post.createdBy.name}">Author Name</span>
             </p>
 
+            <!-- Category and tags -->
+            <div class="mb-3">
+                <span class="badge bg-primary me-1" th:text="${post.category.name}">Category</span>
+                <span class="badge bg-secondary me-1" th:each="tag : ${post.tags}" th:text="${tag.name}">Tag</span>
+            </div>
+
             <!-- Post content -->
             <div class="post-content mt-4">
                 <p th:utext="${post.contentHtml}">Post Content</p>

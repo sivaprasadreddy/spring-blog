@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.sivalabs.springblog.TestcontainersConfig;
 import com.sivalabs.springblog.domain.models.Tag;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +82,31 @@ class JdbcTagRepositoryTest {
         // Verify it's deleted
         var tag = tagRepository.findById(tagId);
         assertThat(tag).isEmpty();
+    }
+
+    @Test
+    void shouldFindTagsByPostIds() {
+        // Insert some test data for post_tags
+        jdbcClient
+                .sql("INSERT INTO post_tags (post_id, tag_id) VALUES (1, 1), (1, 2), (2, 2), (2, 3), (3, 1), (3, 3)")
+                .update();
+
+        // Call the method with a list of postIds
+        Map<Long, Set<Tag>> tagsByPostIds = tagRepository.findTagsByPostIds(List.of(1L, 2L, 3L));
+
+        // Verify the results
+        assertThat(tagsByPostIds).hasSize(3);
+
+        // Post 1 should have tags 1 (Java) and 2 (SpringBoot)
+        assertThat(tagsByPostIds.get(1L)).hasSize(2);
+        assertThat(tagsByPostIds.get(1L)).extracting(Tag::getName).containsExactlyInAnyOrder("Java", "SpringBoot");
+
+        // Post 2 should have tags 2 (SpringBoot) and 3 (Quarkus)
+        assertThat(tagsByPostIds.get(2L)).hasSize(2);
+        assertThat(tagsByPostIds.get(2L)).extracting(Tag::getName).containsExactlyInAnyOrder("SpringBoot", "Quarkus");
+
+        // Post 3 should have tags 1 (Java) and 3 (Quarkus)
+        assertThat(tagsByPostIds.get(3L)).hasSize(2);
+        assertThat(tagsByPostIds.get(3L)).extracting(Tag::getName).containsExactlyInAnyOrder("Java", "Quarkus");
     }
 }

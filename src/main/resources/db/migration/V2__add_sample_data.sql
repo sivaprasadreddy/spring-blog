@@ -53,6 +53,15 @@ INSERT INTO POSTS (id, title, slug, short_description, content_markdown, content
 (21, 'Twenty-first Post', 'twenty-first-post', 'This is the twenty-first post', '# Markdown content 21', '<p>HTML content 21</p>', 2,'DRAFT', 1),
 (22, 'Twenty-second Post', 'twenty-second-post', 'This is the twenty-second post', '# Markdown content 22', '<p>HTML content 22</p>', 3, 'PUBLISHED', 1);
 
+insert into post_tags(post_id, tag_id) values
+(1,1),
+(1,2),
+(2,1),
+(2,3),
+(2,5),
+(3,4)
+;
+
 INSERT INTO COMMENTS (id, name, content, post_id, created_by) VALUES
 (1, 'Geovanny', 'This is a comment on the first post.', 1, 2),
 (2, 'Siva', 'This is another comment on the first post.', 1, 1);
