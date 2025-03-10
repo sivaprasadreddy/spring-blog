@@ -31,6 +31,7 @@ class PostController {
         PagedResult<Post> pagedResult = postService.getPosts(pageNo, properties.pageSize());
         model.addAttribute("pagedResult", pagedResult);
         model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("tags", postService.findAllTags());
         return "blog/posts";
     }
 
@@ -41,7 +42,20 @@ class PostController {
         PagedResult<Post> pagedResult = postService.getPostsByCategorySlug(slug, pageNo, properties.pageSize());
         model.addAttribute("pagedResult", pagedResult);
         model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("tags", postService.findAllTags());
         model.addAttribute("categorySlug", slug);
+        return "blog/posts";
+    }
+
+    @GetMapping("/tag/{slug}")
+    String getPostsByTag(
+            @PathVariable String slug, @RequestParam(name = "page", defaultValue = "1") int pageNo, Model model) {
+        log.info("Fetching posts for tag slug: {} and page: {}", slug, pageNo);
+        PagedResult<Post> pagedResult = postService.getPostsByTagSlug(slug, pageNo, properties.pageSize());
+        model.addAttribute("pagedResult", pagedResult);
+        model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("tags", postService.findAllTags());
+        model.addAttribute("tagSlug", slug);
         return "blog/posts";
     }
 
@@ -51,6 +65,8 @@ class PostController {
         Post post = postService.getPostBySlug(slug);
         model.addAttribute("post", post);
         model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("tags", postService.findAllTags());
+        model.addAttribute("tagSlug", null);
         return "blog/post-details";
     }
 }

@@ -108,6 +108,22 @@
                     </ul>
                 </div>
             </div>
+
+            <!-- Tags Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Tags</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap">
+                        <span th:each="tag : ${tags}" class="me-2 mb-2">
+                            <a th:href="@{'/posts/tag/' + ${tag.slug}}" 
+                               th:text="${tag.name}" 
+                               th:class="${tagSlug != null && tagSlug == tag.slug} ? 'badge bg-primary text-decoration-none' : 'badge bg-secondary text-decoration-none'">Tag Name</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

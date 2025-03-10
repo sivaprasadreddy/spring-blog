@@ -45,6 +45,11 @@ public class PostService {
         return loadPostTags(pagedResult);
     }
 
+    public PagedResult<Post> getPostsByTagSlug(String tagSlug, int pageNo, int pageSize) {
+        PagedResult<Post> pagedResult = postRepository.findPostsByTagSlug(tagSlug, pageNo, pageSize);
+        return loadPostTags(pagedResult);
+    }
+
     private PagedResult<Post> loadPostTags(PagedResult<Post> pagedResult) {
         List<Long> postIds = pagedResult.data().stream().map(Post::getId).toList();
         Map<Long, Set<Tag>> tagsByPostIds = this.getTagsByPostIds(postIds);
@@ -86,6 +91,10 @@ public class PostService {
 
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    public List<Tag> findAllTags() {
+        return tagRepository.findAll();
     }
 
     public List<Comment> findAllComments() {

@@ -108,6 +108,48 @@ public class JdbcPostRepository implements PostRepository {
     }
 
     @Override
+    public PagedResult<Post> findPostsByTagSlug(String tagSlug, int pageNo, int pageSize) {
+        String countSql =
+                """
+            SELECT count(DISTINCT p.id)
+            FROM posts p
+            JOIN post_tags pt ON p.id = pt.post_id
+            JOIN tags t ON t.id = pt.tag_id
+            WHERE t.slug = ?
+            """;
+        long totalElements =
+                jdbcClient.sql(countSql).param(tagSlug).query(Long.class).single();
+        if (totalElements == 0) {
+            return PagedResult.empty();
+        }
+
+        int offset = (pageNo - 1) * pageSize;
+
+        String sql =
+                """
+            SELECT DISTINCT p.*, c.id as category_id, c.name as category_name, c.slug as category_slug,
+                   u.id as user_id, u.name as user_name, u.email as user_email, u.role as user_role
+            FROM posts p
+            JOIN categories c ON c.id = p.category_id
+            JOIN users u ON u.id = p.created_by
+            JOIN post_tags pt ON p.id = pt.post_id
+            JOIN tags t ON t.id = pt.tag_id
+            WHERE t.slug = ?
+            ORDER BY p.created_date DESC LIMIT ? OFFSET ?
+            """;
+
+        var posts = jdbcClient
+                .sql(sql)
+                .param(tagSlug)
+                .param(pageSize)
+                .param(offset)
+                .query(new PostRowMapper())
+                .list();
+
+        return PagedResult.of(posts, pageNo, pageSize, totalElements);
+    }
+
+    @Override
     public Optional<Post> findBySlug(String slug) {
         String sql =
                 """
