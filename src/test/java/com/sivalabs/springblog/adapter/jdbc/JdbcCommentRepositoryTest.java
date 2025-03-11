@@ -75,4 +75,27 @@ class JdbcCommentRepositoryTest {
         var comment = commentRepository.findById(commentId);
         assertThat(comment).isEmpty();
     }
+
+    @Test
+    void shouldDeleteCommentsByPostIds() {
+        // Create a few new comments for a specific post
+        Long postId = 2L;
+        Comment comment1 =
+                new Comment(null, "Test Delete Post 1", "Test Delete Post Comment 1", postId, 1L, LocalDateTime.now());
+        Comment comment2 =
+                new Comment(null, "Test Delete Post 2", "Test Delete Post Comment 2", postId, 1L, LocalDateTime.now());
+        commentRepository.create(comment1);
+        commentRepository.create(comment2);
+
+        // Verify comments exist for this post
+        List<Comment> commentsBeforeDelete = commentRepository.findByPostId(postId);
+        assertThat(commentsBeforeDelete).isNotEmpty();
+
+        // Delete comments for this post
+        commentRepository.deleteCommentsByPostIds(List.of(postId));
+
+        // Verify they're deleted
+        List<Comment> commentsAfterDelete = commentRepository.findByPostId(postId);
+        assertThat(commentsAfterDelete).isEmpty();
+    }
 }

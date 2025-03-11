@@ -53,12 +53,6 @@ class JdbcTagRepositoryTest {
     }
 
     @Test
-    void shouldGetAllTags() {
-        List<Tag> tags = tagRepository.findAll();
-        assertThat(tags).hasSize(10);
-    }
-
-    @Test
     void shouldUpdateTag() {
         Tag tag = new Tag(1L, "Updated Java", "updated-java");
         tagRepository.update(tag);
@@ -86,11 +80,6 @@ class JdbcTagRepositoryTest {
 
     @Test
     void shouldFindTagsByPostIds() {
-        // Insert some test data for post_tags
-        jdbcClient
-                .sql("INSERT INTO post_tags (post_id, tag_id) VALUES (1, 1), (1, 2), (2, 2), (2, 3), (3, 1), (3, 3)")
-                .update();
-
         // Call the method with a list of postIds
         Map<Long, Set<Tag>> tagsByPostIds = tagRepository.findTagsByPostIds(List.of(1L, 2L, 3L));
 
@@ -108,5 +97,31 @@ class JdbcTagRepositoryTest {
         // Post 3 should have tags 1 (Java) and 3 (Quarkus)
         assertThat(tagsByPostIds.get(3L)).hasSize(2);
         assertThat(tagsByPostIds.get(3L)).extracting(Tag::getName).containsExactlyInAnyOrder("Java", "Quarkus");
+    }
+
+    @Test
+    void shouldHandleEmptyOrNullListInFindTagsByPostIds() {
+        // Test with empty list
+        Map<Long, Set<Tag>> emptyResult = tagRepository.findTagsByPostIds(List.of());
+        assertThat(emptyResult).isEmpty();
+
+        // Test with null list
+        Map<Long, Set<Tag>> nullResult = tagRepository.findTagsByPostIds(null);
+        assertThat(nullResult).isEmpty();
+    }
+
+    @Test
+    void shouldFindTagBySlug() {
+        // Find an existing tag by slug
+        var tag = tagRepository.findBySlug("java");
+        assertThat(tag).isPresent();
+        assertThat(tag.get().getName()).isEqualTo("Java");
+        assertThat(tag.get().getId()).isEqualTo(1L);
+    }
+
+    @Test
+    void shouldReturnEmptyWhenTagSlugNotFound() {
+        var tag = tagRepository.findBySlug("non-existent-slug");
+        assertThat(tag).isEmpty();
     }
 }

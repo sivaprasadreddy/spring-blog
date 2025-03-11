@@ -5,9 +5,7 @@ import com.sivalabs.springblog.domain.models.Category;
 import com.sivalabs.springblog.domain.models.Post;
 import com.sivalabs.springblog.domain.models.PostStatus;
 import com.sivalabs.springblog.domain.models.Tag;
-import com.sivalabs.springblog.domain.services.MarkdownUtils;
-import com.sivalabs.springblog.domain.services.PostService;
-import com.sivalabs.springblog.domain.services.UserService;
+import com.sivalabs.springblog.domain.services.*;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -24,11 +22,20 @@ import org.springframework.stereotype.Component;
 public class DataLoader implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(DataLoader.class);
     private final PostService postService;
+    private final CategoryService categoryService;
+    private final TagService tagService;
     private final ObjectMapper objectMapper;
     private final UserService userService;
 
-    public DataLoader(PostService postService, ObjectMapper objectMapper, UserService userService) {
+    public DataLoader(
+            PostService postService,
+            CategoryService categoryService,
+            TagService tagService,
+            ObjectMapper objectMapper,
+            UserService userService) {
         this.postService = postService;
+        this.categoryService = categoryService;
+        this.tagService = tagService;
         this.objectMapper = objectMapper;
         this.userService = userService;
     }
@@ -48,9 +55,9 @@ public class DataLoader implements CommandLineRunner {
             String html = MarkdownUtils.toHTML(mdContent);
 
             Set<Tag> tags = postEntry.tags().stream()
-                    .map(postService::getOrCreateTagByName)
+                    .map(tagService::getOrCreateTagByName)
                     .collect(Collectors.toSet());
-            Category category = postService.getOrCreateCategoryByName(postEntry.category());
+            Category category = categoryService.getOrCreateCategoryByName(postEntry.category());
             Post post = new Post(
                     null,
                     postEntry.title(),

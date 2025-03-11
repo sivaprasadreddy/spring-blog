@@ -1,9 +1,15 @@
-DELETE FROM post_tags;
-DELETE FROM comments;
-DELETE FROM posts;
-DELETE FROM tags;
-DELETE FROM categories;
-DELETE FROM users;
+DELETE
+FROM post_tags;
+DELETE
+FROM comments;
+DELETE
+FROM posts;
+DELETE
+FROM tags;
+DELETE
+FROM categories;
+DELETE
+FROM users;
 
 INSERT INTO USERS (id, email, password, name, role)
 VALUES (1, 'siva@gmail.com', '$2a$10$N67CcMRogzY9hNicu/sSGubZnlMu.b0niQkLk/rT1i57xERkvdbj6', 'Siva Prasad',
@@ -82,6 +88,14 @@ VALUES (1, 'First Post', 'first-post', 'This is the first post', '# Markdown con
         '<p>HTML content 21</p>', 2, 'DRAFT', 1),
        (22, 'Twenty-second Post', 'twenty-second-post', 'This is the twenty-second post', '# Markdown content 22',
         '<p>HTML content 22</p>', 3, 'PUBLISHED', 1);
+
+INSERT INTO post_tags (post_id, tag_id)
+VALUES (1, 1),
+       (1, 2),
+       (2, 2),
+       (2, 3),
+       (3, 1),
+       (3, 3);
 
 INSERT INTO COMMENTS (id, name, content, post_id, created_by)
 VALUES (1, 'Geovanny', 'This is a comment on the first post.', 1, 2),

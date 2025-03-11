@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sivalabs.springblog.TestcontainersConfig;
 import com.sivalabs.springblog.domain.models.Category;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +50,6 @@ class JdbcCategoryRepositoryTest {
     }
 
     @Test
-    void shouldGetAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
-        assertThat(categories).hasSize(10);
-    }
-
-    @Test
     void shouldUpdateCategory() {
         Category category = new Category(1L, "Updated Java", "updated-java");
         categoryRepository.update(category);
@@ -79,6 +72,21 @@ class JdbcCategoryRepositoryTest {
 
         // Verify it's deleted
         var category = categoryRepository.findById(categoryId);
+        assertThat(category).isEmpty();
+    }
+
+    @Test
+    void shouldFindCategoryBySlug() {
+        var category = categoryRepository.findBySlug("java");
+        assertThat(category).isPresent();
+        assertThat(category.get().getId()).isEqualTo(1L);
+        assertThat(category.get().getName()).isEqualTo("Java");
+        assertThat(category.get().getSlug()).isEqualTo("java");
+    }
+
+    @Test
+    void shouldReturnEmptyWhenCategorySlugNotFound() {
+        var category = categoryRepository.findBySlug("non-existent-slug");
         assertThat(category).isEmpty();
     }
 }

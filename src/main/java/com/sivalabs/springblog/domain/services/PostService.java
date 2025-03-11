@@ -1,11 +1,9 @@
 package com.sivalabs.springblog.domain.services;
 
-import com.sivalabs.springblog.domain.data.CategoryRepository;
 import com.sivalabs.springblog.domain.data.CommentRepository;
 import com.sivalabs.springblog.domain.data.PostRepository;
 import com.sivalabs.springblog.domain.data.TagRepository;
 import com.sivalabs.springblog.domain.exceptions.ResourceNotFoundException;
-import com.sivalabs.springblog.domain.models.Category;
 import com.sivalabs.springblog.domain.models.Comment;
 import com.sivalabs.springblog.domain.models.PagedResult;
 import com.sivalabs.springblog.domain.models.Post;
@@ -21,17 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
 
     public PostService(
-            PostRepository postRepository,
-            CommentRepository commentRepository,
-            CategoryRepository categoryRepository,
-            TagRepository tagRepository) {
+            PostRepository postRepository, CommentRepository commentRepository, TagRepository tagRepository) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
-        this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
     }
 
@@ -113,23 +106,5 @@ public class PostService {
     @Transactional
     public void deleteCommentsByIds(List<Long> commentIds) {
         commentRepository.deleteCommentsByIds(commentIds);
-    }
-
-    public List<Category> findAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-    @Transactional
-    public Category getOrCreateCategoryByName(String name) {
-        return categoryRepository.getOrCreateCategoryByName(name);
-    }
-
-    public List<Tag> findAllTags() {
-        return tagRepository.findAll();
-    }
-
-    @Transactional
-    public Tag getOrCreateTagByName(String name) {
-        return tagRepository.getOrCreateTagByName(name);
     }
 }

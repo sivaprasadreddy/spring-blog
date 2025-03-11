@@ -2,6 +2,7 @@ package com.sivalabs.springblog.web.controllers;
 
 import com.sivalabs.springblog.ApplicationProperties;
 import com.sivalabs.springblog.domain.models.*;
+import com.sivalabs.springblog.domain.services.CategoryService;
 import com.sivalabs.springblog.domain.services.PostService;
 import com.sivalabs.springblog.web.forms.CreatePostForm;
 import com.sivalabs.springblog.web.forms.EditPostForm;
@@ -20,10 +21,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
     private final PostService postService;
+    private final CategoryService categoryService;
     private final ApplicationProperties properties;
 
-    public AdminController(PostService postService, ApplicationProperties properties) {
+    public AdminController(PostService postService, CategoryService categoryService, ApplicationProperties properties) {
         this.postService = postService;
+        this.categoryService = categoryService;
         this.properties = properties;
     }
 
@@ -51,7 +54,7 @@ public class AdminController {
     @GetMapping("/categories")
     public String getAllCategories(Model model) {
         log.info("Fetching all categories for admin view");
-        List<Category> categories = postService.findAllCategories();
+        List<Category> categories = categoryService.findAllCategories();
         model.addAttribute("categories", categories);
         return "admin/categories";
     }
@@ -88,7 +91,7 @@ public class AdminController {
     public String showCreatePostForm(Model model) {
         log.info("Showing create post form");
         model.addAttribute("post", new CreatePostForm());
-        model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("categories", categoryService.findAllCategories());
         model.addAttribute("statuses", PostStatus.values());
         return "admin/create-post";
     }
@@ -103,7 +106,7 @@ public class AdminController {
 
         if (bindingResult.hasErrors()) {
             log.info("Validation errors in post creation form");
-            model.addAttribute("categories", postService.findAllCategories());
+            model.addAttribute("categories", categoryService.findAllCategories());
             model.addAttribute("statuses", PostStatus.values());
             return "admin/create-post";
         }
@@ -123,7 +126,7 @@ public class AdminController {
         EditPostForm form = new EditPostForm(post);
 
         model.addAttribute("post", form);
-        model.addAttribute("categories", postService.findAllCategories());
+        model.addAttribute("categories", categoryService.findAllCategories());
         model.addAttribute("statuses", PostStatus.values());
         return "admin/edit-post";
     }
@@ -138,7 +141,7 @@ public class AdminController {
 
         if (bindingResult.hasErrors()) {
             log.info("Validation errors in post edit form");
-            model.addAttribute("categories", postService.findAllCategories());
+            model.addAttribute("categories", categoryService.findAllCategories());
             model.addAttribute("statuses", PostStatus.values());
             return "admin/edit-post";
         }
