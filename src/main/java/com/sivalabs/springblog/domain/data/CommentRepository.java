@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository {
-    Comment create(Comment comment);
+
+    List<Comment> findAll();
 
     Optional<Comment> findById(Long id);
 
     List<Comment> findByPostId(Long postId);
 
-    List<Comment> findAll();
+    Comment create(Comment comment);
 
     void deleteById(Long id);
 

@@ -7,19 +7,20 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface TagRepository {
-    Tag create(Tag tag);
 
-    Tag getOrCreateTagByName(String name);
+    List<Tag> findAll();
 
     Optional<Tag> findById(Long id);
 
     Optional<Tag> findBySlug(String slug);
 
-    List<Tag> findAll();
+    Map<Long, Set<Tag>> findTagsByPostIds(List<Long> postIds);
+
+    Tag create(Tag tag);
+
+    Tag getOrCreateTagByName(String name);
 
     void update(Tag tag);
 
     void deleteById(Long id);
-
-    Map<Long, Set<Tag>> findTagsByPostIds(List<Long> postIds);
 }

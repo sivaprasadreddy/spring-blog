@@ -25,6 +25,24 @@ public class JdbcTagRepository implements TagRepository {
     }
 
     @Override
+    public List<Tag> findAll() {
+        String sql = "select * from tags order by name";
+        return jdbcClient.sql(sql).query(new TagRowMapper()).list();
+    }
+
+    @Override
+    public Optional<Tag> findById(Long id) {
+        String sql = "select * from tags where id = ?";
+        return jdbcClient.sql(sql).param(id).query(new TagRowMapper()).optional();
+    }
+
+    @Override
+    public Optional<Tag> findBySlug(String slug) {
+        String sql = "select * from tags where slug = ?";
+        return jdbcClient.sql(sql).param(slug).query(new TagRowMapper()).optional();
+    }
+
+    @Override
     public Tag create(Tag tag) {
         String slug = tag.getSlug();
         if (slug == null) {
@@ -56,24 +74,6 @@ public class JdbcTagRepository implements TagRepository {
             tag = create(tag);
         }
         return tag;
-    }
-
-    @Override
-    public Optional<Tag> findById(Long id) {
-        String sql = "select * from tags where id = ?";
-        return jdbcClient.sql(sql).param(id).query(new TagRowMapper()).optional();
-    }
-
-    @Override
-    public Optional<Tag> findBySlug(String slug) {
-        String sql = "select * from tags where slug = ?";
-        return jdbcClient.sql(sql).param(slug).query(new TagRowMapper()).optional();
-    }
-
-    @Override
-    public List<Tag> findAll() {
-        String sql = "select * from tags order by name";
-        return jdbcClient.sql(sql).query(new TagRowMapper()).list();
     }
 
     @Override

@@ -20,6 +20,24 @@ public class JdbcCommentRepository implements CommentRepository {
     }
 
     @Override
+    public List<Comment> findAll() {
+        String sql = "select * from comments order by created_date desc";
+        return jdbcClient.sql(sql).query(new CommentRowMapper()).list();
+    }
+
+    @Override
+    public Optional<Comment> findById(Long id) {
+        String sql = "select * from comments where id = ?";
+        return jdbcClient.sql(sql).param(id).query(new CommentRowMapper()).optional();
+    }
+
+    @Override
+    public List<Comment> findByPostId(Long postId) {
+        String sql = "select * from comments where post_id = ? order by created_date desc";
+        return jdbcClient.sql(sql).param(postId).query(new CommentRowMapper()).list();
+    }
+
+    @Override
     public Comment create(Comment comment) {
         String sql =
                 """
@@ -41,27 +59,9 @@ public class JdbcCommentRepository implements CommentRepository {
     }
 
     @Override
-    public Optional<Comment> findById(Long id) {
-        String sql = "select * from comments where id = ?";
-        return jdbcClient.sql(sql).param(id).query(new CommentRowMapper()).optional();
-    }
-
-    @Override
-    public List<Comment> findByPostId(Long postId) {
-        String sql = "select * from comments where post_id = ? order by created_date desc";
-        return jdbcClient.sql(sql).param(postId).query(new CommentRowMapper()).list();
-    }
-
-    @Override
     public void deleteById(Long id) {
         String sql = "delete from comments where id = ?";
         jdbcClient.sql(sql).param(id).update();
-    }
-
-    @Override
-    public List<Comment> findAll() {
-        String sql = "select * from comments order by created_date desc";
-        return jdbcClient.sql(sql).query(new CommentRowMapper()).list();
     }
 
     @Override
@@ -70,7 +70,6 @@ public class JdbcCommentRepository implements CommentRepository {
             return;
         }
 
-        // Create placeholders for the IN clause (?, ?, ?)
         String placeholders = String.join(",", ids.stream().map(id -> "?").toList());
         String sql = "delete from comments where id IN (" + placeholders + ")";
 

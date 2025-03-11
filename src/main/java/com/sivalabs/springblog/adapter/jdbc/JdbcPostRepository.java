@@ -20,31 +20,6 @@ public class JdbcPostRepository implements PostRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public Long create(Post post) {
-        String sql =
-                """
-                insert into posts (title, slug, short_description, content_markdown,
-                                   content_html, status, category_id, created_by)
-                values (:title, :slug, :short_description, :content_markdown,
-                        :content_html, :status, :category_id, :created_by)
-                returning id
-                """;
-        var keyHolder = new GeneratedKeyHolder();
-        jdbcClient
-                .sql(sql)
-                .param("title", post.getTitle())
-                .param("slug", post.getSlug())
-                .param("short_description", post.getShortDescription())
-                .param("content_markdown", post.getContentMarkdown())
-                .param("content_html", post.getContentHtml())
-                .param("status", post.getStatus().name())
-                .param("category_id", post.getCategory().getId())
-                .param("created_by", post.getCreatedBy().getId())
-                .update(keyHolder);
-        post.setId(keyHolder.getKeyAs(Long.class));
-        return post.getId();
-    }
-
     @Override
     public PagedResult<Post> findAllPosts(int pageNo, int pageSize) {
         String countSql = "SELECT count(*) FROM posts";
@@ -164,21 +139,32 @@ public class JdbcPostRepository implements PostRepository {
         return jdbcClient.sql(sql).param(slug).query(new PostRowMapper()).optional();
     }
 
-    @Override
-    public void deletePostsByIds(List<Long> ids) {
-        if (ids == null || ids.isEmpty()) {
-            return;
-        }
+    public Long create(Post post) {
+        String sql =
+                """
+                insert into posts (title, slug, short_description, content_markdown,
+                                   content_html, status, category_id, created_by)
+                values (:title, :slug, :short_description, :content_markdown,
+                        :content_html, :status, :category_id, :created_by)
+                returning id
+                """;
+        var keyHolder = new GeneratedKeyHolder();
+        jdbcClient
+                .sql(sql)
+                .param("title", post.getTitle())
+                .param("slug", post.getSlug())
+                .param("short_description", post.getShortDescription())
+                .param("content_markdown", post.getContentMarkdown())
+                .param("content_html", post.getContentHtml())
+                .param("status", post.getStatus().name())
+                .param("category_id", post.getCategory().getId())
+                .param("created_by", post.getCreatedBy().getId())
+                .update(keyHolder);
+        post.setId(keyHolder.getKeyAs(Long.class));
 
-        // Create placeholders for the IN clause (?, ?, ?)
-        String placeholders = String.join(",", ids.stream().map(id -> "?").toList());
-        String sql = "DELETE FROM posts WHERE id IN (" + placeholders + ")";
+        this.insertPostTags(post.getId(), post.getTags());
 
-        var spec = jdbcClient.sql(sql);
-        for (Long id : ids) {
-            spec = spec.param(id);
-        }
-        spec.update();
+        return post.getId();
     }
 
     @Override
@@ -193,6 +179,23 @@ public class JdbcPostRepository implements PostRepository {
             WHERE p.id = ?
             """;
         return jdbcClient.sql(sql).param(id).query(new PostRowMapper()).optional();
+    }
+
+    @Override
+    public void deletePostsByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+        this.deletePostTagsByIds(ids);
+
+        String placeholders = String.join(",", ids.stream().map(id -> "?").toList());
+        String sql = "DELETE FROM posts WHERE id IN (" + placeholders + ")";
+
+        var spec = jdbcClient.sql(sql);
+        for (Long id : ids) {
+            spec = spec.param(id);
+        }
+        spec.update();
     }
 
     @Override
@@ -218,7 +221,16 @@ public class JdbcPostRepository implements PostRepository {
     }
 
     @Override
-    public void addPostTags(Long postId, Set<Tag> tags) {
+    public Long findPostsCount() {
+        return jdbcClient.sql("SELECT count(*) FROM posts").query(Long.class).single();
+    }
+
+    private void deletePostTagsByIds(List<Long> ids) {
+        String sql = "delete from post_tags where post_id IN (:postIds)";
+        jdbcClient.sql(sql).param("postIds", ids).update();
+    }
+
+    private void insertPostTags(Long postId, Set<Tag> tags) {
         String sql =
                 """
                 insert into post_tags (post_id, tag_id)
@@ -229,17 +241,6 @@ public class JdbcPostRepository implements PostRepository {
                 .param("post_id", postId)
                 .param("tag_id", tag.getId())
                 .update());
-    }
-
-    @Override
-    public Long findPostsCount() {
-        return jdbcClient.sql("SELECT count(*) FROM posts").query(Long.class).single();
-    }
-
-    @Override
-    public void deletePostTagsByIds(List<Long> ids) {
-        String sql = "delete from post_tags where post_id IN (:postIds)";
-        jdbcClient.sql(sql).param("postIds", ids).update();
     }
 
     static class PostRowMapper implements RowMapper<Post> {

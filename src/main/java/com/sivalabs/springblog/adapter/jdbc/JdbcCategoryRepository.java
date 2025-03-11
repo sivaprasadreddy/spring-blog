@@ -21,6 +21,24 @@ public class JdbcCategoryRepository implements CategoryRepository {
     }
 
     @Override
+    public List<Category> findAll() {
+        String sql = "select * from categories order by name";
+        return jdbcClient.sql(sql).query(new CategoryRowMapper()).list();
+    }
+
+    @Override
+    public Optional<Category> findById(Long id) {
+        String sql = "select * from categories where id = ?";
+        return jdbcClient.sql(sql).param(id).query(new CategoryRowMapper()).optional();
+    }
+
+    @Override
+    public Optional<Category> findBySlug(String slug) {
+        String sql = "select * from categories where slug = ?";
+        return jdbcClient.sql(sql).param(slug).query(new CategoryRowMapper()).optional();
+    }
+
+    @Override
     public Category create(Category category) {
         String sql =
                 """
@@ -47,24 +65,6 @@ public class JdbcCategoryRepository implements CategoryRepository {
             category = create(category);
         }
         return category;
-    }
-
-    @Override
-    public Optional<Category> findById(Long id) {
-        String sql = "select * from categories where id = ?";
-        return jdbcClient.sql(sql).param(id).query(new CategoryRowMapper()).optional();
-    }
-
-    @Override
-    public Optional<Category> findBySlug(String slug) {
-        String sql = "select * from categories where slug = ?";
-        return jdbcClient.sql(sql).param(slug).query(new CategoryRowMapper()).optional();
-    }
-
-    @Override
-    public List<Category> findAll() {
-        String sql = "select * from categories order by name";
-        return jdbcClient.sql(sql).query(new CategoryRowMapper()).list();
     }
 
     @Override

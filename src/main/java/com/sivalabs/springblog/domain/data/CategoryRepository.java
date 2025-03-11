@@ -5,15 +5,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository {
-    Category create(Category category);
 
-    Category getOrCreateCategoryByName(String name);
+    List<Category> findAll();
 
     Optional<Category> findById(Long id);
 
     Optional<Category> findBySlug(String slug);
 
-    List<Category> findAll();
+    Category create(Category category);
+
+    Category getOrCreateCategoryByName(String name);
 
     void update(Category category);
 

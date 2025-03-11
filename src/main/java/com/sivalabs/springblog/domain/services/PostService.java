@@ -50,6 +50,10 @@ public class PostService {
         return loadPostTags(pagedResult);
     }
 
+    public Long getPostsCount() {
+        return postRepository.findPostsCount();
+    }
+
     private PagedResult<Post> loadPostTags(PagedResult<Post> pagedResult) {
         List<Long> postIds = pagedResult.data().stream().map(Post::getId).toList();
         Map<Long, Set<Tag>> tagsByPostIds = this.getTagsByPostIds(postIds);
@@ -77,13 +81,33 @@ public class PostService {
         return post;
     }
 
+    private Map<Long, Set<Tag>> getTagsByPostIds(List<Long> postIds) {
+        if (postIds == null || postIds.isEmpty()) {
+            return Map.of();
+        }
+        return tagRepository.findTagsByPostIds(postIds);
+    }
+
+    @Transactional
+    public void createPost(Post post) {
+        postRepository.create(post);
+    }
+
+    @Transactional
+    public void updatePost(Post post) {
+        postRepository.update(post);
+    }
+
     @Transactional
     public void deletePostsByIds(List<Long> ids) {
         if (ids != null && !ids.isEmpty()) {
             commentRepository.deleteCommentsByPostIds(ids);
-            postRepository.deletePostTagsByIds(ids);
             postRepository.deletePostsByIds(ids);
         }
+    }
+
+    public List<Comment> findAllComments() {
+        return commentRepository.findAll();
     }
 
     @Transactional
@@ -95,44 +119,17 @@ public class PostService {
         return categoryRepository.findAll();
     }
 
-    public List<Tag> findAllTags() {
-        return tagRepository.findAll();
-    }
-
-    public List<Comment> findAllComments() {
-        return commentRepository.findAll();
-    }
-
-    @Transactional
-    public void createPost(Post post) {
-        var postId = postRepository.create(post);
-        Set<Tag> tags = post.getTags();
-        postRepository.addPostTags(postId, tags);
-    }
-
-    @Transactional
-    public void updatePost(Post post) {
-        postRepository.update(post);
-    }
-
-    public Map<Long, Set<Tag>> getTagsByPostIds(List<Long> postIds) {
-        if (postIds == null || postIds.isEmpty()) {
-            return Map.of();
-        }
-        return tagRepository.findTagsByPostIds(postIds);
-    }
-
     @Transactional
     public Category getOrCreateCategoryByName(String name) {
         return categoryRepository.getOrCreateCategoryByName(name);
     }
 
+    public List<Tag> findAllTags() {
+        return tagRepository.findAll();
+    }
+
     @Transactional
     public Tag getOrCreateTagByName(String name) {
         return tagRepository.getOrCreateTagByName(name);
-    }
-
-    public Long getPostsCount() {
-        return postRepository.findPostsCount();
     }
 }
