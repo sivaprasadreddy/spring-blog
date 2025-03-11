@@ -42,14 +42,10 @@ public class DataLoader implements CommandLineRunner {
         }
         InputStream inputStream = new ClassPathResource("posts.json").getInputStream();
         PostEntries postEntries = objectMapper.readValue(inputStream, PostEntries.class);
-        // System.out.println("postEntries = " + postEntries.posts);
         for (PostEntry postEntry : postEntries.posts) {
             String markdownFile = postEntry.markdownFile();
             String mdContent = new ClassPathResource("data/" + markdownFile).getContentAsString(StandardCharsets.UTF_8);
-            // System.out.println("Title: "+ postEntry.title());
-            // System.out.println("mdContent = " + mdContent);
             String html = MarkdownUtils.toHTML(mdContent);
-            // System.out.println("html = " + html);
 
             Set<Tag> tags = postEntry.tags().stream()
                     .map(postService::getOrCreateTagByName)

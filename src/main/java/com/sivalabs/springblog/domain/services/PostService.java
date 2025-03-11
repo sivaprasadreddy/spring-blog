@@ -80,6 +80,8 @@ public class PostService {
     @Transactional
     public void deletePostsByIds(List<Long> ids) {
         if (ids != null && !ids.isEmpty()) {
+            commentRepository.deleteCommentsByPostIds(ids);
+            postRepository.deletePostTagsByIds(ids);
             postRepository.deletePostsByIds(ids);
         }
     }
@@ -113,12 +115,6 @@ public class PostService {
         postRepository.update(post);
     }
 
-    /**
-     * Fetches associated tags for the given list of postIds.
-     *
-     * @param postIds List of post IDs
-     * @return Map where key is postId and value is a Set of Tags associated with that post
-     */
     public Map<Long, Set<Tag>> getTagsByPostIds(List<Long> postIds) {
         if (postIds == null || postIds.isEmpty()) {
             return Map.of();

@@ -81,6 +81,12 @@ public class JdbcCommentRepository implements CommentRepository {
         spec.update();
     }
 
+    @Override
+    public void deleteCommentsByPostIds(List<Long> ids) {
+        String sql = "delete from comments where post_id IN (:postIds)";
+        jdbcClient.sql(sql).param("postIds", ids).update();
+    }
+
     static class CommentRowMapper implements RowMapper<Comment> {
         @Override
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {

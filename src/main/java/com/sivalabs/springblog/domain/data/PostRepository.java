@@ -28,4 +28,6 @@ public interface PostRepository {
     void addPostTags(Long postId, Set<Tag> tags);
 
     Long findPostsCount();
+
+    void deletePostTagsByIds(List<Long> ids);
 }

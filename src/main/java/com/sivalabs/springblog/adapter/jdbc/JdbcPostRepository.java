@@ -236,6 +236,12 @@ public class JdbcPostRepository implements PostRepository {
         return jdbcClient.sql("SELECT count(*) FROM posts").query(Long.class).single();
     }
 
+    @Override
+    public void deletePostTagsByIds(List<Long> ids) {
+        String sql = "delete from post_tags where post_id IN (:postIds)";
+        jdbcClient.sql(sql).param("postIds", ids).update();
+    }
+
     static class PostRowMapper implements RowMapper<Post> {
         @Override
         public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
