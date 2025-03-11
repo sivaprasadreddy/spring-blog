@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 
 public class Comment {
     private Long id;
-    private String name;
     private String content;
     private Long postId;
-    private Long createdUserId;
+    private User createdBy;
     private LocalDateTime createdDate;
 
     public Comment() {}
@@ -16,12 +15,11 @@ public class Comment {
         this.id = id;
     }
 
-    public Comment(Long id, String name, String content, Long postId, Long createdUserId, LocalDateTime createdDate) {
+    public Comment(Long id, String content, Long postId, User createdBy, LocalDateTime createdDate) {
         this.id = id;
-        this.name = name;
         this.content = content;
         this.postId = postId;
-        this.createdUserId = createdUserId;
+        this.createdBy = createdBy;
         this.createdDate = createdDate;
     }
 
@@ -31,14 +29,6 @@ public class Comment {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getContent() {
@@ -57,12 +47,12 @@ public class Comment {
         this.postId = postId;
     }
 
-    public Long getCreatedUserId() {
-        return createdUserId;
+    public User getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCreatedUserId(Long createdUserId) {
-        this.createdUserId = createdUserId;
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     public LocalDateTime getCreatedDate() {

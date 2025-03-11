@@ -182,8 +182,8 @@ class PostServiceTest {
         @Test
         void shouldDeleteCommentsByIds() {
             // Create a few new comments first
-            Comment comment1 = new Comment(null, "Test Delete 1", "Test Delete Comment 1", 1L, 1L, LocalDateTime.now());
-            Comment comment2 = new Comment(null, "Test Delete 2", "Test Delete Comment 2", 1L, 1L, LocalDateTime.now());
+            Comment comment1 = new Comment(null, "Test Delete Comment 1", 1L, new User(1L), LocalDateTime.now());
+            Comment comment2 = new Comment(null, "Test Delete Comment 2", 1L, new User(1L), LocalDateTime.now());
             Comment savedComment1 = commentRepository.create(comment1);
             Comment savedComment2 = commentRepository.create(comment2);
             Long commentId1 = savedComment1.getId();

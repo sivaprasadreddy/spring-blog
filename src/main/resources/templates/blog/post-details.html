@@ -3,6 +3,7 @@
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity"
       layout:decorate="~{layout/layout}">
 <head>
     <title th:text="${post.title}">Post Details</title>
@@ -37,16 +38,40 @@
             <!-- Comments Section -->
             <div class="mt-5">
                 <h3>Comments</h3>
+
                 <div th:if="${#lists.isEmpty(comments)}" class="alert alert-info">
                     No comments yet. Be the first to comment!
                 </div>
+
+                <!-- Login prompt for non-authenticated users -->
+                <div sec:authorize="isAnonymous()" class="alert alert-info mb-4">
+                    <a th:href="@{/login}">Login</a> to post a comment.
+                </div>
+
+                <!-- Comment Form for authenticated users -->
+                <div sec:authorize="isAuthenticated()" class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Add a Comment</h5>
+                        <form th:action="@{'/posts/' + ${post.slug} + '/comments'}" th:object="${commentForm}" method="post">
+                            <input type="hidden" th:name="postId" th:value="${post.id}">
+                            <div class="mb-3">
+                                <textarea th:field="*{content}" class="form-control" rows="3" placeholder="Write your comment here..."></textarea>
+                                <div class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Comment</button>
+                        </form>
+                    </div>
+                </div>
+
                 <div th:if="${not #lists.isEmpty(comments)}" class="comments-list">
                     <div th:each="comment : ${comments}" class="card mb-3">
                         <div class="card-body">
-                            <h5 class="card-title" th:text="${comment.name}">Commenter Name</h5>
                             <p class="card-text" th:text="${comment.content}">Comment content...</p>
                             <p class="card-text">
-                                <small class="text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">2023-01-01</small>
+                                <small class="text-muted">
+                                    <strong th:text="${comment.createdBy.name}">UserName</strong>
+                                    on <strong th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">2023-01-01</strong>
+                                </small>
                             </p>
                         </div>
                     </div>

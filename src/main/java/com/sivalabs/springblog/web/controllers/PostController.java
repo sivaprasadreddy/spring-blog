@@ -6,9 +6,12 @@ import com.sivalabs.springblog.domain.models.Comment;
 import com.sivalabs.springblog.domain.models.PagedResult;
 import com.sivalabs.springblog.domain.models.Post;
 import com.sivalabs.springblog.domain.models.Tag;
+import com.sivalabs.springblog.domain.models.User;
 import com.sivalabs.springblog.domain.services.CategoryService;
 import com.sivalabs.springblog.domain.services.PostService;
 import com.sivalabs.springblog.domain.services.TagService;
+import com.sivalabs.springblog.web.forms.CommentForm;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +75,7 @@ class PostController {
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         model.addAttribute("tagSlug", null);
+        model.addAttribute("commentForm", new CommentForm());
         return "blog/post-details";
     }
 
@@ -83,5 +87,16 @@ class PostController {
     @ModelAttribute("tags")
     List<Tag> allTags() {
         return tagService.findAllTags();
+    }
+
+    @PostMapping("/{slug}/comments")
+    String addComment(@PathVariable String slug, @Valid CommentForm commentForm, Model model) {
+        log.info("Adding comment to post with slug: {}", slug);
+        Post post = postService.getPostBySlug(slug);
+        commentForm.setPostId(post.getId());
+        User user = new User(UserContextUtils.getCurrentUserIdOrThrow());
+        Comment comment = commentForm.toComment(user);
+        postService.createComment(comment);
+        return "redirect:/posts/" + slug;
     }
 }

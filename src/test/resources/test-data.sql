@@ -1,15 +1,9 @@
-DELETE
-FROM post_tags;
-DELETE
-FROM comments;
-DELETE
-FROM posts;
-DELETE
-FROM tags;
-DELETE
-FROM categories;
-DELETE
-FROM users;
+DELETE FROM post_tags;
+DELETE FROM comments;
+DELETE FROM posts;
+DELETE FROM tags;
+DELETE FROM categories;
+DELETE FROM users;
 
 INSERT INTO USERS (id, email, password, name, role)
 VALUES (1, 'siva@gmail.com', '$2a$10$N67CcMRogzY9hNicu/sSGubZnlMu.b0niQkLk/rT1i57xERkvdbj6', 'Siva Prasad',
@@ -97,6 +91,6 @@ VALUES (1, 1),
        (3, 1),
        (3, 3);
 
-INSERT INTO COMMENTS (id, name, content, post_id, created_by)
-VALUES (1, 'Geovanny', 'This is a comment on the first post.', 1, 2),
-       (2, 'Siva', 'This is another comment on the first post.', 1, 1);
+INSERT INTO COMMENTS (id, content, post_id, created_by)
+VALUES (1, 'This is a comment on the first post.', 1, 2),
+       (2, 'This is another comment on the first post.', 1, 1);

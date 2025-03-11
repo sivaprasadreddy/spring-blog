@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sivalabs.springblog.TestcontainersConfig;
 import com.sivalabs.springblog.domain.models.Comment;
+import com.sivalabs.springblog.domain.models.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,13 +31,12 @@ class JdbcCommentRepositoryTest {
 
     @Test
     void shouldCreateComment() {
-        Comment comment = new Comment(null, "Test User", "Test Comment", 1L, 1L, LocalDateTime.now());
+        Comment comment = new Comment(null, "Test Comment", 1L, new User(1L), LocalDateTime.now());
         Comment savedComment = commentRepository.create(comment);
         assertThat(savedComment.getId()).isNotNull();
-        assertThat(savedComment.getName()).isEqualTo("Test User");
         assertThat(savedComment.getContent()).isEqualTo("Test Comment");
         assertThat(savedComment.getPostId()).isEqualTo(1L);
-        assertThat(savedComment.getCreatedUserId()).isEqualTo(1L);
+        assertThat(savedComment.getCreatedBy().getId()).isEqualTo(1L);
         assertThat(savedComment.getCreatedDate()).isNotNull();
     }
 
@@ -44,7 +44,6 @@ class JdbcCommentRepositoryTest {
     void shouldFindCommentById() {
         var comment = commentRepository.findById(1L);
         assertThat(comment).isPresent();
-        assertThat(comment.get().getName()).isEqualTo("Geovanny");
         assertThat(comment.get().getContent()).isEqualTo("This is a comment on the first post.");
     }
 
@@ -64,7 +63,7 @@ class JdbcCommentRepositoryTest {
     @Test
     void shouldDeleteComment() {
         // Create a new comment first
-        Comment newComment = new Comment(null, "Test Delete", "Test Delete Comment", 1L, 1L, LocalDateTime.now());
+        Comment newComment = new Comment(null, "Test Delete Comment", 1L, new User(1L), LocalDateTime.now());
         Comment savedComment = commentRepository.create(newComment);
         Long commentId = savedComment.getId();
 
@@ -80,10 +79,8 @@ class JdbcCommentRepositoryTest {
     void shouldDeleteCommentsByPostIds() {
         // Create a few new comments for a specific post
         Long postId = 2L;
-        Comment comment1 =
-                new Comment(null, "Test Delete Post 1", "Test Delete Post Comment 1", postId, 1L, LocalDateTime.now());
-        Comment comment2 =
-                new Comment(null, "Test Delete Post 2", "Test Delete Post Comment 2", postId, 1L, LocalDateTime.now());
+        Comment comment1 = new Comment(null, "Test Delete Post Comment 1", postId, new User(1L), LocalDateTime.now());
+        Comment comment2 = new Comment(null, "Test Delete Post Comment 2", postId, new User(1L), LocalDateTime.now());
         commentRepository.create(comment1);
         commentRepository.create(comment2);
 

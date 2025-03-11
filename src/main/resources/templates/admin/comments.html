@@ -40,7 +40,6 @@
                         <input type="checkbox" id="selectAll" class="form-check-input">
                     </th>
                     <th>ID</th>
-                    <th>Name</th>
                     <th>Content</th>
                     <th>Post ID</th>
                     <th>Created By</th>
@@ -53,10 +52,9 @@
                         <input type="checkbox" name="commentIds" th:value="${comment.id}" class="form-check-input comment-checkbox">
                     </td>
                     <td th:text="${comment.id}">1</td>
-                    <td th:text="${comment.name}">Commenter Name</td>
                     <td th:text="${comment.content}">Comment content...</td>
                     <td th:text="${comment.postId}">123</td>
-                    <td th:text="${comment.createdUserId}">456</td>
+                    <td th:text="${comment.createdBy.name}">userName</td>
                     <td th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">2023-01-01</td>
                 </tr>
             </tbody>

@@ -111,4 +111,9 @@ public class PostService {
     public void deleteCommentsByIds(List<Long> commentIds) {
         commentRepository.deleteCommentsByIds(commentIds);
     }
+
+    @Transactional
+    public Comment createComment(Comment comment) {
+        return commentRepository.create(comment);
+    }
 }
