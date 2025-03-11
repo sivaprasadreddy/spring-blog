@@ -33,7 +33,7 @@ public class JdbcCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByPostId(Long postId) {
-        String sql = "select * from comments where post_id = ? order by created_date desc";
+        String sql = "select * from comments where post_id = ? order by created_date asc";
         return jdbcClient.sql(sql).param(postId).query(new CommentRowMapper()).list();
     }
 

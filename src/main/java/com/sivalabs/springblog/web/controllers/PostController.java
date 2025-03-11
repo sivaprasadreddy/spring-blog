@@ -2,6 +2,7 @@ package com.sivalabs.springblog.web.controllers;
 
 import com.sivalabs.springblog.ApplicationProperties;
 import com.sivalabs.springblog.domain.models.Category;
+import com.sivalabs.springblog.domain.models.Comment;
 import com.sivalabs.springblog.domain.models.PagedResult;
 import com.sivalabs.springblog.domain.models.Post;
 import com.sivalabs.springblog.domain.models.Tag;
@@ -67,7 +68,9 @@ class PostController {
     String getPostDetails(@PathVariable String slug, Model model) {
         log.info("Fetching post details for slug: {}", slug);
         Post post = postService.getPostBySlug(slug);
+        List<Comment> comments = postService.findCommentsByPostId(post.getId());
         model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
         model.addAttribute("tagSlug", null);
         return "blog/post-details";
     }

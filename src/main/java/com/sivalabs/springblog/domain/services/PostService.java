@@ -103,6 +103,10 @@ public class PostService {
         return commentRepository.findAll();
     }
 
+    public List<Comment> findCommentsByPostId(Long postId) {
+        return commentRepository.findByPostId(postId);
+    }
+
     @Transactional
     public void deleteCommentsByIds(List<Long> commentIds) {
         commentRepository.deleteCommentsByIds(commentIds);

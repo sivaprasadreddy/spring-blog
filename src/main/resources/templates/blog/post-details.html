@@ -34,6 +34,25 @@
                 <p th:utext="${post.contentHtml}">Post Content</p>
             </div>
 
+            <!-- Comments Section -->
+            <div class="mt-5">
+                <h3>Comments</h3>
+                <div th:if="${#lists.isEmpty(comments)}" class="alert alert-info">
+                    No comments yet. Be the first to comment!
+                </div>
+                <div th:if="${not #lists.isEmpty(comments)}" class="comments-list">
+                    <div th:each="comment : ${comments}" class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${comment.name}">Commenter Name</h5>
+                            <p class="card-text" th:text="${comment.content}">Comment content...</p>
+                            <p class="card-text">
+                                <small class="text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">2023-01-01</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Button to return to the list of posts -->
             <div class="mt-4">
                 <a th:href="@{/posts}" class="btn btn-primary">Back to Posts</a>
