@@ -84,6 +84,12 @@
             <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">Category error message</div>
         </div>
         <div class="mb-3">
+            <label for="tags" class="form-label">Tags</label>
+            <input type="text" class="form-control" id="tags" th:field="*{tags}" th:classappend="${#fields.hasErrors('tags')} ? 'is-invalid'">
+            <div class="form-text">Comma separated tag names</div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('tags')}" th:errors="*{tags}">tags error message</div>
+        </div>
+        <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select class="form-select" id="status" th:field="*{status}" th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'" required>
                 <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}">Status</option>

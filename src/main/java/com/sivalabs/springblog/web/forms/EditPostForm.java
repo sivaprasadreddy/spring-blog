@@ -3,15 +3,16 @@ package com.sivalabs.springblog.web.forms;
 import com.sivalabs.springblog.domain.models.Category;
 import com.sivalabs.springblog.domain.models.Post;
 import com.sivalabs.springblog.domain.models.PostStatus;
+import com.sivalabs.springblog.domain.models.Tag;
 import com.sivalabs.springblog.domain.services.MarkdownUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import java.util.Set;
 
 public class EditPostForm {
     private Long id;
 
-    @NotBlank(message = "Title is required") @Size(min = 3, max = 255, message = "Title must be between 3 and 255 characters") private String title;
+    @NotBlank(message = "Title is required") private String title;
 
     @NotBlank(message = "Slug is required") private String slug;
 
@@ -20,6 +21,8 @@ public class EditPostForm {
     @NotBlank(message = "Content in Markdown format is required") private String contentMarkdown;
 
     @NotNull(message = "Category is required") private Long categoryId;
+
+    private String tags;
 
     @NotNull(message = "Status is required") private PostStatus status;
 
@@ -32,6 +35,7 @@ public class EditPostForm {
         this.shortDescription = post.getShortDescription();
         this.contentMarkdown = post.getContentMarkdown();
         this.categoryId = post.getCategory().getId();
+        this.tags = String.join(",", post.getTags().stream().map(Tag::getName).toList());
         this.status = post.getStatus();
     }
 
@@ -83,6 +87,14 @@ public class EditPostForm {
         this.categoryId = categoryId;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     public PostStatus getStatus() {
         return status;
     }
@@ -100,6 +112,7 @@ public class EditPostForm {
         post.setContentMarkdown(this.contentMarkdown);
         post.setContentHtml(MarkdownUtils.toHTML(this.contentMarkdown));
         post.setCategory(new Category(this.categoryId));
+        post.setTags(Set.of());
         post.setStatus(this.status);
         return post;
     }

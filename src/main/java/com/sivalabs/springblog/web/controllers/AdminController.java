@@ -4,10 +4,14 @@ import com.sivalabs.springblog.ApplicationProperties;
 import com.sivalabs.springblog.domain.models.*;
 import com.sivalabs.springblog.domain.services.CategoryService;
 import com.sivalabs.springblog.domain.services.PostService;
+import com.sivalabs.springblog.domain.services.TagService;
 import com.sivalabs.springblog.web.forms.CreatePostForm;
 import com.sivalabs.springblog.web.forms.EditPostForm;
 import jakarta.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,11 +27,17 @@ public class AdminController {
     private final PostService postService;
     private final CategoryService categoryService;
     private final ApplicationProperties properties;
+    private final TagService tagService;
 
-    public AdminController(PostService postService, CategoryService categoryService, ApplicationProperties properties) {
+    public AdminController(
+            PostService postService,
+            CategoryService categoryService,
+            ApplicationProperties properties,
+            TagService tagService) {
         this.postService = postService;
         this.categoryService = categoryService;
         this.properties = properties;
+        this.tagService = tagService;
     }
 
     @GetMapping
@@ -113,6 +123,12 @@ public class AdminController {
 
         User user = new User(UserContextUtils.getCurrentUserIdOrThrow());
         Post post = form.toPost(user);
+        List<String> tagNames = Arrays.stream(form.getTags().split(","))
+                .map(String::trim)
+                .filter(tag -> !tag.isBlank())
+                .toList();
+        Set<Tag> tags = tagNames.stream().map(tagService::getOrCreateTagByName).collect(Collectors.toSet());
+        post.setTags(tags);
 
         postService.createPost(post);
         redirectAttributes.addFlashAttribute("message", "Post created successfully");
@@ -147,6 +163,13 @@ public class AdminController {
         }
 
         Post post = form.toPost();
+        List<String> tagNames = Arrays.stream(form.getTags().split(","))
+                .map(String::trim)
+                .filter(tag -> !tag.isBlank())
+                .toList();
+        Set<Tag> tags = tagNames.stream().map(tagService::getOrCreateTagByName).collect(Collectors.toSet());
+        post.setTags(tags);
+
         postService.updatePost(post);
         redirectAttributes.addFlashAttribute("message", "Post updated successfully");
         return "redirect:/admin/posts";

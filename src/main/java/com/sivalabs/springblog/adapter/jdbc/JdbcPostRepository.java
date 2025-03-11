@@ -218,6 +218,9 @@ public class JdbcPostRepository implements PostRepository {
                 .param("category_id", post.getCategory().getId())
                 .param("id", post.getId())
                 .update();
+
+        this.deletePostTagsByIds(List.of(post.getId()));
+        this.insertPostTags(post.getId(), post.getTags());
     }
 
     @Override
