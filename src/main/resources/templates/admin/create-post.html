@@ -69,7 +69,7 @@
             <div class="invalid-feedback" th:if="${#fields.hasErrors('shortDescription')}" th:errors="*{shortDescription}">Short description error message</div>
         </div>
         <div class="mb-3">
-            <label for="contentMarkdown" class="form-label">Content (Markdown)</label>
+            <label for="contentMarkdown" class="form-label">Content</label>
             <textarea class="form-control" id="contentMarkdown" th:field="*{contentMarkdown}" th:classappend="${#fields.hasErrors('contentMarkdown')} ? 'is-invalid'" rows="10" required></textarea>
             <div class="invalid-feedback" th:if="${#fields.hasErrors('contentMarkdown')}" th:errors="*{contentMarkdown}">Content markdown error message</div>
         </div>
@@ -97,6 +97,59 @@
         </div>
         <button type="submit" class="btn btn-primary">Create Post</button>
     </form>
+</div>
+<div layout:fragment="pageScripts">
+    <!-- TinyMCE from CDN -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <!-- Turndown - HTML to Markdown converter -->
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+    <!-- Showdown - Markdown to HTML converter (for initial content) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script>
+        // Initialize TurndownService for HTML to Markdown conversion
+        const turndownService = new TurndownService({
+            headingStyle: 'atx',
+            codeBlockStyle: 'fenced'
+        });
+
+        // Initialize Showdown for Markdown to HTML conversion
+        const showdownConverter = new showdown.Converter();
+
+        tinymce.init({
+            selector: '#contentMarkdown',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            height: 500,
+            setup: function(editor) {
+                // Get initial content and convert from Markdown to HTML for editing
+                editor.on('init', function() {
+                    const textarea = document.getElementById('contentMarkdown');
+                    const markdownContent = textarea.value;
+
+                    // Only set content if there's actual content (for new posts, it will be empty)
+                    if (markdownContent && markdownContent.trim() !== '') {
+                        // Convert Markdown to HTML for the editor
+                        const htmlContent = showdownConverter.makeHtml(markdownContent);
+                        editor.setContent(htmlContent);
+                    }
+                });
+
+                // Convert HTML to Markdown before form submission
+                editor.on('change', function() {
+                    const htmlContent = editor.getContent();
+                    const markdownContent = turndownService.turndown(htmlContent);
+                    document.getElementById('contentMarkdown').value = markdownContent;
+                });
+
+                // Also ensure the form field is updated before submit
+                document.querySelector('form').addEventListener('submit', function() {
+                    const htmlContent = editor.getContent();
+                    const markdownContent = turndownService.turndown(htmlContent);
+                    document.getElementById('contentMarkdown').value = markdownContent;
+                });
+            }
+        });
+    </script>
 </div>
 </body>
 </html>
