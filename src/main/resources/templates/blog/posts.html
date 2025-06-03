@@ -12,6 +12,9 @@
     <div class="row">
         <!-- Main Content Column -->
         <div class="col-md-9">
+            <div th:if="${#lists.isEmpty(pagedResult.data)}" class="alert alert-info">
+                <h1>No posts found</h1>
+            </div>
             <div class="row row-cols-1">
                 <div class="col mb-3" th:each="post : ${pagedResult.data}">
                     <div class="card h-100">
@@ -36,7 +39,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center" th:if="${!pagedResult.data.isEmpty()}">
                 <ul class="pagination">
                     <!-- First Button -->
                     <li class="page-item" th:classappend="${pagedResult.isFirst} ? 'disabled' : ''">

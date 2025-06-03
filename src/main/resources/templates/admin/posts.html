@@ -73,7 +73,7 @@
     </form>
 
     <!-- Pagination -->
-    <div>
+    <div class="d-flex justify-content-center" th:if="${!pagedResult.data.isEmpty()}">
         <ul class="pagination">
             <!-- Previous Button -->
             <li th:if="${pagedResult.hasPrevious}" class="page-item">
