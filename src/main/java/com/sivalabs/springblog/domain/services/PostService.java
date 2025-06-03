@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
@@ -28,21 +27,25 @@ public class PostService {
         this.tagRepository = tagRepository;
     }
 
+    @Transactional(readOnly = true)
     public PagedResult<Post> getPosts(int pageNo, int pageSize) {
         PagedResult<Post> pagedResult = postRepository.findAllPosts(pageNo, pageSize);
         return loadPostTags(pagedResult);
     }
 
+    @Transactional(readOnly = true)
     public PagedResult<Post> getPostsByCategorySlug(String categorySlug, int pageNo, int pageSize) {
         PagedResult<Post> pagedResult = postRepository.findPostsByCategorySlug(categorySlug, pageNo, pageSize);
         return loadPostTags(pagedResult);
     }
 
+    @Transactional(readOnly = true)
     public PagedResult<Post> getPostsByTagSlug(String tagSlug, int pageNo, int pageSize) {
         PagedResult<Post> pagedResult = postRepository.findPostsByTagSlug(tagSlug, pageNo, pageSize);
         return loadPostTags(pagedResult);
     }
 
+    @Transactional(readOnly = true)
     public Long getPostsCount() {
         return postRepository.findPostsCount();
     }
@@ -56,6 +59,7 @@ public class PostService {
         });
     }
 
+    @Transactional(readOnly = true)
     public Post getPostBySlug(String slug) {
         var post = postRepository
                 .findBySlug(slug)
@@ -65,6 +69,7 @@ public class PostService {
         return post;
     }
 
+    @Transactional(readOnly = true)
     public Post getPostById(Long id) {
         var post = postRepository
                 .findById(id)
@@ -99,10 +104,12 @@ public class PostService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Comment> findAllComments() {
         return commentRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Comment> findCommentsByPostId(Long postId) {
         return commentRepository.findByPostId(postId);
     }

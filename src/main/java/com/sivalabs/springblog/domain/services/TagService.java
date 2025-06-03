@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class TagService {
     private final TagRepository tagRepository;
 
@@ -15,6 +14,7 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Tag> findAllTags() {
         return tagRepository.findAll();
     }

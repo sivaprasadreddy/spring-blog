@@ -2,7 +2,7 @@
 A blogging platform using Java and Spring Boot.
 
 ## Prerequisites
-* JDK 21
+* JDK 24
 * Docker and Docker Compose
 * Your favourite IDE (Recommended: [IntelliJ IDEA](https://www.jetbrains.com/idea/))
 
@@ -11,7 +11,7 @@ Install JDK, Maven using [SDKMAN](https://sdkman.io/)
 ```shell
 $ curl -s "https://get.sdkman.io" | bash
 $ source "$HOME/.sdkman/bin/sdkman-init.sh"
-$ sdk install java 21.0.1-tem
+$ sdk install java 24.0.1-tem
 $ sdk install maven
 ```
 

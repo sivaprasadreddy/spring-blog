@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -50,7 +50,8 @@ public class WebSecurityConfig {
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error")
                 .permitAll());
-        http.logout(c -> c.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+        http.logout(c -> c.logoutRequestMatcher(
+                        PathPatternRequestMatcher.withDefaults().matcher("/logout"))
                 .permitAll()
                 .logoutSuccessUrl("/"));
         return http.build();

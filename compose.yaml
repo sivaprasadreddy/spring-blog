@@ -1,7 +1,7 @@
 services:
   blog-db:
-    container_name: "blog-db"
     image:  postgres:17
+    container_name: "blog-db"
     ports:
       - "5432:5432"
     environment:
